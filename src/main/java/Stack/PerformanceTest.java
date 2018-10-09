@@ -31,7 +31,7 @@ public class PerformanceTest {
         ArrayStack<Integer> aStack = new ArrayStack<Integer>();
 
         double t1 = PerformanceTest.testStack(lStack, opCount);
-        System.out.println("LinkedListStack: " + t1 + " s\n");
+        System.out.println("LinkedListStack: " + t1 + " s");
 
         double t2 = PerformanceTest.testStack(aStack, opCount);
         System.out.println("ArrayStack: " + t2 + " s");

@@ -51,14 +51,29 @@ public class LinkedListQueue<E> implements Queue<E> {
         Node retNode = head;
         head = head.next;
         retNode.next = null;
-        if (head == null) tail = null;  // ???
         size--;
+        if (size == 0) tail = null;  // size 为0说明之前链表中只有一个元素，head 和 tail 都指向它，当它被 dequeue 之后，需要维护一下 tail
         return retNode.e;
     }
 
-    public E getFront() { return head.e; }
+    public E getFront() {
+        if (isEmpty())
+            throw new IllegalArgumentException("getHead failed. Queue is empty");
+        return head.e;
+    }
 
     public int getSize() { return size; }
 
     public boolean isEmpty() { return size == 0; }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
+        s.append("Queue: front [");
+        for (Node curr = head; curr != null; curr = curr.next)
+            s.append(curr + " -> ");
+        s.append("null] tail");
+
+        return s.toString();
+    }
 }

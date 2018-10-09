@@ -134,7 +134,7 @@ public class LinkedList<E> {
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (Node curr = dummyHead.next; curr != null; curr = curr.next)
-            s.append(curr.e + " -> ");
+            s.append(curr + " -> ");
         s.append("null");
         return s.toString();
     }

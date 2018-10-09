@@ -5,6 +5,7 @@ import java.util.Random;
 /*
 * - 因为 ArrayQueue 每一次 dequeue 时间复杂度是 O(n)，而 testQueue 用 for 循环 dequeue 了 n 次，所以总复杂度是 O(n^2).
 * - 而 LoopQueue 每一次 dequeue 时间复杂度是 O(1)，所以通过 testQueue 的 for 循环 dequeue 了 n 次之后，复杂度是 O(n).
+* - LinkedListQueue 和 LoopQueue 的复杂度在同一级别，所以性能差距不大。
 * - 必须明确的是，时间复杂度只衡量趋势，看n无限大时的情况。所以他也有另一个称呼，叫“渐进时间复杂度”，这个“渐进”的由来就在这里。
 *   n要渐进无穷。但是对于具体的测试用例，时间复杂度无法描述具体性能，因为时间复杂度忽略了常数项和低阶项。一个算法，时间需要
 *   10000n，100n，2n，其时间复杂度都是O(n)级别的算法。
@@ -32,11 +33,15 @@ public class PerformanceTest {
         int opCount = 100000;
         LoopQueue<Integer> loopQueue = new LoopQueue<Integer>();
         ArrayQueue<Integer> arrayQueue = new ArrayQueue<Integer>();
+        LinkedListQueue<Integer> linkedListQueue = new LinkedListQueue<Integer>();
 
-        double t1 = PerformanceTest.testQueue(loopQueue, opCount);
-        System.out.println("LoopQueue: " + t1 + " s\n");
+        double t1 = PerformanceTest.testQueue(linkedListQueue, opCount);
+        System.out.println("linkedListQueue: " + t1 + " s");
 
-        double t2 = PerformanceTest.testQueue(arrayQueue, opCount);
-        System.out.println("ArrayQueue: " + t2 + " s");
+        double t2 = PerformanceTest.testQueue(loopQueue, opCount);
+        System.out.println("LoopQueue: " + t2 + " s");
+
+        double t3 = PerformanceTest.testQueue(arrayQueue, opCount);
+        System.out.println("ArrayQueue: " + t3 + " s");
     }
 }
