@@ -44,8 +44,16 @@ public class LinkedList<E> {
         size = 0;
     }
 
-    public LinkedList(Array arr) {
-        // TODO
+    public LinkedList(E[] arr) {  // 通过数组生成链表的构造函数
+        if (arr == null || arr.length == 0)
+            throw new IllegalArgumentException("Invalid array");
+
+        dummyHead = new Node(null, null);
+        Node curr = dummyHead;
+        for (int i = 0; i < arr.length; i++) {
+            curr.next = new Node(arr[i], null);
+            curr = curr.next;
+        }
     }
 
     public int getSize() { return size; }

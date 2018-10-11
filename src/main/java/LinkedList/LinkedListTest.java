@@ -16,6 +16,9 @@ public class LinkedListTest {
         System.out.println(l);
         l.removeFirst();
         l.removeLast();
-        System.out.println(l);
+        System.out.println(l + "\n");
+
+        LinkedList<Integer> l2 = new LinkedList<Integer>(new Integer[]{9, 8, 7, 6});  // 测试通过数组生成链表. 注意这里数组不能写成 int[]
+        System.out.println(l2);
     }
 }

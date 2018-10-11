@@ -38,10 +38,6 @@ public class LinkedListWithoutDummyHead<E> {
         size = 0;
     }
 
-    public LinkedListWithoutDummyHead(Array arr) {  // 用于将 Array 转换为 LinkedList 的构造函数
-        // TODO
-    }
-
     public int getSize() { return size; }
 
     public boolean isEmpty() { return size == 0; }
