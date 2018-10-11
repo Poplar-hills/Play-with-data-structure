@@ -1,9 +1,6 @@
 package LinkedList;
 
-import LinkedList.L203_Remove_Linked_List_Elements.ListNode;
-import LinkedList.L203_Remove_Linked_List_Elements.Solution;
-import LinkedList.L203_Remove_Linked_List_Elements.Solution1;
-import LinkedList.L203_Remove_Linked_List_Elements.Solution2;
+import LinkedList.L203_Remove_Linked_List_Elements.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +40,12 @@ class L203_Remove_Linked_List_ElementsTest {
     @Test
     void should_remove_elements_from_linked_list_using_solution2() {
         Solution s = new Solution2();
+        test(s);
+    }
+
+    @Test
+    void should_remove_elements_from_linked_list_using_solution3() {
+        Solution s = new Solution3();
         test(s);
     }
 }
