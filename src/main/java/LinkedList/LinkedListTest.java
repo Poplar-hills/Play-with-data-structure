@@ -9,6 +9,7 @@ public class LinkedListTest {
         }
 
         l.addAtIndex(888, 2);
+        l.addAtIndex2(999, 4);
         System.out.println(l);
         System.out.println(l.contains(888) + " " + l.get(2));
 

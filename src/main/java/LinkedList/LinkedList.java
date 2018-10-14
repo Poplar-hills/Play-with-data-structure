@@ -53,6 +53,7 @@ public class LinkedList<E> {
         for (int i = 0; i < arr.length; i++) {
             curr.next = new Node(arr[i], null);
             curr = curr.next;
+            size++;
         }
     }
 
@@ -72,6 +73,21 @@ public class LinkedList<E> {
             prev = prev.next;  // 不再是 index - 1，因为多了一个 dummy head node
         prev.next = new Node(e, prev.next);
         size++;
+    }
+
+    public void addAtIndex2(E e, int index) {  // 增操作的递归实现
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("addAtIndex failed. Reuqires index < 0 || index > size");
+        dummyHead = add(dummyHead, e, index, 0);
+    }
+
+    private Node add(Node prev, E e, int index, int depth) {
+        if (depth == index) {
+            prev.next = new Node(e, prev.next);
+            size++;
+        } else
+            prev.next = add(prev.next, e, index, depth + 1);
+        return prev;
     }
 
     public void addFirst(E e) { addAtIndex(e, 0); }
@@ -141,6 +157,7 @@ public class LinkedList<E> {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
+        s.append("Size: " + size + ", ");
         for (Node curr = dummyHead.next; curr != null; curr = curr.next)
             s.append(curr + " -> ");
         s.append("null");
