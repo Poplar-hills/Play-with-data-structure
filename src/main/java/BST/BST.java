@@ -17,11 +17,22 @@ package BST;
 *   - 后序遍的一个应用是为 BST 释放内存，即对于一个节点需要先释放所有子节点的内存，再释放该节点内存，因此需要后续遍历。
 *     因为 Java 是自动垃圾回收，所以不需要操心这个问题，但 C++ 就需要了。
 * - 实际上在一次 BST 的遍历中，每个节点都有3次访问机会（前、中、后序）就看需要什么样的访问顺序了。
+*
+* - 除了这里实现的 BST 方法外，常见的还有 floor、ceil、rank、select 等，实现 SEE：https://coding.imooc.com/learn/questiondetail/63002.html
+*
+* - 对于树的遍历算法，无论是前中后序遍历，时间复杂度都是 O(n) 的，n 是树中节点个数。因为每一个节点在递归的过程中，只访问了一次。
+* - 空间复杂度，通常说是 O(h) 的，h 是树的最大高度。这是因为在递归的过程中，每向下递归一层，就需要占用一定的系统栈空间。最多占
+*   用 h 的空间。在这里要注意，我们说空间复杂度，通常是指完成算法所用的辅助空间的复杂度，而不用管算法前置的空间复杂度。比如在树
+*   的遍历算法中，整棵树肯定要占 O(n) 的空间，n 是树中节点的个数，这部分空间是“固定成本”，即肯定存在的，所以不讨论它。
+* - 对于平衡二叉树，我们会说其空间复杂度是 O(logn) 的，这是因为平衡二叉树的高度 h 就是 O(logn) 级别的。但是对于一般的树，严谨起见，
+*   还是要说 O(h) 的。这个 h 可能是 logn（最好情况），也可能是 n（最坏情况）
 * */
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
-public class BST<E extends Comparable> {
+public class BST<E extends Comparable> {  // 可比较的泛型
     Node root;
     int size;
 
@@ -60,7 +71,85 @@ public class BST<E extends Comparable> {
         else if (e.compareTo(node.e) > 0)  // 注意 compareTo(...) == 0 的情况不处理，这个 BST 的实现不允许存在重复节点
             node.right = add(node.right, e);
 
+        return node;  // 每次递归返回的都是子树更新后的根节点
+    }
+
+    /*
+    * 删操作
+    * */
+    public E removeMin() {  // 从 BST 中删除值最小的节点
+        E min = getMin();  // 找到最小值
+        root = removeMin(root);  // 从树上删除最小值节点和上一步的找到最小值实际上是分离的操作
+        return min;
+    }
+
+    private Node removeMin(Node node) {
+        if (node.left == null) {  // 最小值节点
+            Node rightNode = node.right;  // 可能有右子树，也可能没有，但可以统一操作
+            node.right = null;
+            size--;
+            return rightNode;  // 将右子树返回给上一层节点，作为其左子树
+        }
+        node.left = removeMin(node.left);  // 返回节点作为左子树
+        return node;  // 每次递归返回的都是子树更新后的根节点
+    }
+
+    public E removeMax() {
+        E min = getMax();
+        root = removeMax(root);
+        return min;
+    }
+
+    private Node removeMax(Node node) {
+        if (node.right == null) {
+            Node leftNode = node.left;
+            node.left = null;
+            size--;
+            return leftNode;
+        }
+        node.right = removeMax(node.right);
         return node;
+    }
+
+    public void remove(E e) {  // 从 BST 中删除任意一个节点
+        root = remove(root, e);
+    }
+
+    private Node remove(Node node, E e) {
+        if (node == null)  // 在整棵树上都没找到 e
+            return null;
+
+        if (e.compareTo(node.e) < 0) {
+            node.left = remove(node.left, e);
+            return node;
+        } else if (e.compareTo(node.e) > 0) {
+            node.right = remove(node.right, e);
+            return node;
+        } else {  // 递归的终止条件：e equals to node.e
+            if (node.left == null) {  // 如果待删除节点只有右子树
+                Node rightNode = node.right;
+                node.right = null;
+                size--;
+                return rightNode;
+            }
+
+            if (node.right == null) {  // 如果待删除节点只有左子树
+                Node leftNode = node.left;
+                node.left = null;
+                size--;
+                return leftNode;
+            }
+
+            // 如果待删除节点左右子数都存在，则使用 Hibbard Deletion 方法：
+            // 1. 找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点）（其实找前驱节点也可以，即比待删除节点小的最大节点）
+            // 2. 用这个节点取代待删除节点的位置
+            // 3. 删除待删除节点
+            Node successor = getMin(node.right);
+            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了
+            successor.left = node.left;
+            node.left = node.right = null;
+            return successor;
+        }
     }
 
     /*
@@ -83,6 +172,30 @@ public class BST<E extends Comparable> {
 
         // 递归的最小重复单元
         return contains(e.compareTo(node.e) < 0 ? node.left : node.right, e);
+    }
+
+    public E getMin() {  // 获取 BST 的最小值。因为每个节点的左孩子都比该节点小，因此整棵 BST 的最小值就在左下角的叶子节点上
+        if (size == 0)
+            throw new IllegalArgumentException("getMin failed. Empty tree");
+        return (E) getMin(root).e;
+    }
+
+    private Node getMin(Node curr) {
+        if (curr.left == null)  // 终止条件是向左走到头，不再有左孩子的节点
+            return curr;
+        return getMin(curr.left);
+    }
+
+    public E getMax() {
+        if (size == 0)
+            throw new IllegalArgumentException("getMax failed. Empty tree");
+        return (E) getMax(root).e;
+    }
+
+    private Node getMax(Node curr) {
+        if (curr.right == null)
+            return curr;
+        return getMax(curr.right);
     }
 
     /*
@@ -132,6 +245,37 @@ public class BST<E extends Comparable> {
                 System.out.println(curr);  // 访问节点
                 curr = parent.right;
             }
+        }
+    }
+
+    public void levelOrderTraverse() {
+        if (root == null) return;
+        System.out.println(root.e);
+        levelOrderTraverse(root);
+    }
+
+    private void levelOrderTraverse(Node curr) {
+        if (curr.left != null)
+            System.out.println(curr.left.e);
+        if (curr.right != null)
+            System.out.println(curr.right.e);
+        if (curr.left != null)
+            levelOrderTraverse(curr.left);
+        if (curr.right != null)
+            levelOrderTraverse(curr.right);
+    }
+
+    public void levelOrderTraverseNR() {  // 层序遍历（广度优先遍历）
+        Queue<Node> queue = new LinkedList<Node>();  // 使用链表实现的队列作为遍历时使用的数据结构
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node curr = queue.remove();
+            System.out.println(curr.e);
+
+            if (curr.left != null)
+                queue.add(curr.left);
+            if (curr.right != null)
+                queue.add(curr.right);
         }
     }
 
