@@ -55,9 +55,7 @@ public class BST<E extends Comparable> {  // 可比较的泛型
     /*
      * 增操作
      * */
-    public void add(E e) {
-        root = add(root, e);  // 插入之后的结果都是更新这棵树
-    }
+    public void add(E e) { root = add(root, e); }  // 插入之后的结果都是更新这棵树
 
     private Node add(Node node, E e) {  // 因为二叉树具有递归性质，该方法用于将一个节点添加到某一个子树上
         // 递归的终止条件：插入元素的结果都是生成新节点、size + 1
@@ -84,7 +82,7 @@ public class BST<E extends Comparable> {  // 可比较的泛型
     }
 
     private Node removeMin(Node node) {
-        if (node.left == null) {  // 最小值节点
+        if (node.left == null) {  // left == null 的 node 即为最小值节点
             Node rightNode = node.right;  // 可能有右子树，也可能没有，但可以统一操作
             node.right = null;
             size--;
@@ -116,7 +114,7 @@ public class BST<E extends Comparable> {  // 可比较的泛型
     }
 
     private Node remove(Node node, E e) {
-        if (node == null)  // 在整棵树上都没找到 e
+        if (node == null)  // 从根节点到叶子节点的整个路径上都没找到 e
             return null;
 
         if (e.compareTo(node.e) < 0) {
@@ -125,15 +123,15 @@ public class BST<E extends Comparable> {  // 可比较的泛型
         } else if (e.compareTo(node.e) > 0) {
             node.right = remove(node.right, e);
             return node;
-        } else {  // 递归的终止条件：e equals to node.e
-            if (node.left == null) {  // 如果待删除节点只有右子树
+        } else {  // 递归的终止条件：e.compareTo(node.e) == 0 即 e.equals(node.e)，即该节点就是要删除的节点
+            if (node.left == null) {  // 如果待删除节点只有右子树，或左右都没有
                 Node rightNode = node.right;
                 node.right = null;
                 size--;
                 return rightNode;
             }
 
-            if (node.right == null) {  // 如果待删除节点只有左子树
+            if (node.right == null) {  // 如果待删除节点只有左子树，或左右都没有
                 Node leftNode = node.left;
                 node.left = null;
                 size--;
@@ -141,12 +139,12 @@ public class BST<E extends Comparable> {  // 可比较的泛型
             }
 
             // 如果待删除节点左右子数都存在，则使用 Hibbard Deletion 方法：
-            // 1. 找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点）（其实找前驱节点也可以，即比待删除节点小的最大节点）
+            // 1. 找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点。其实找前驱节点也可以，即比待删除节点小的最大节点）
             // 2. 用这个节点取代待删除节点的位置
             // 3. 删除待删除节点
             Node successor = getMin(node.right);
-            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了
-            successor.left = node.left;
+            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先给 successor.right 赋值
+            successor.left = node.left;  // 再给 successor.left 赋值，因为 removeMin 中要找到 node.right 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
             node.left = node.right = null;
             return successor;
         }

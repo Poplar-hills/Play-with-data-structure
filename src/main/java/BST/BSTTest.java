@@ -11,18 +11,20 @@ public class BSTTest {
         for (int i : inputSeq)
             bst.add(i);
         System.out.println(bst);
+        System.out.println("Current BST size: " + bst.getSize());
 
         // 测试遍历 bst
         bst.levelOrderTraverse();
 
         // 测试 getMin, getMax
-        System.out.println(String.format("Min: %d. Max: %d", bst.getMin(), bst.getMax()));
+        System.out.println(String.format("\nMin: %d. Max: %d", bst.getMin(), bst.getMax()));
 
         // 测试 removeMax
         ArrayList<Integer> nums = new ArrayList<Integer>();
         while (!bst.isEmpty())
             nums.add(bst.removeMax());  // 不断 removeMax 并放到数组中
-        System.out.println(nums);  // 结果应该是从大到小排列的
+        System.out.println("Removed: " + nums);  // 结果应该是从大到小排列的
+        System.out.println("Current BST size: " + bst.getSize());
         System.out.println(bst);  // 最后 bst 为 null
     }
 }

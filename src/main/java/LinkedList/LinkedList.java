@@ -16,6 +16,7 @@ package LinkedList;
  * */
 
 import Array.Array;
+import javafx.util.Pair;
 
 public class LinkedList<E> {
 
@@ -101,6 +102,29 @@ public class LinkedList<E> {
         if (index < 0 || index > size)
             throw new IllegalArgumentException("removeAtIndex failed. Reuqires index < 0 || index > size");
 
+        Pair<Node, E> res = removeAtIndex(dummyHead.next, index, 0);
+        dummyHead.next = res.getKey();
+        return res.getValue();
+    }
+
+    private Pair<Node, E> removeAtIndex(Node node, int index, int depth) {
+        if (node == null)
+            return null;
+        if (index == depth) {
+            Node next = node.next;
+            node.next = null;
+            size--;
+            return new Pair<Node, E>(next, node.e);
+        }
+        Pair<Node, E> res = removeAtIndex(node.next, index, depth + 1);
+        node.next = res.getKey();
+        return new Pair<Node, E>(node, res.getValue());
+    }
+
+    public E removeAtIndexNR(int index) {  // 非递归实现
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("removeAtIndex failed. Reuqires index < 0 || index > size");
+
         Node prev = dummyHead;
         for (int i = 0; i < index; i++)
             prev = prev.next;  // 找到待删除节点的前一个节点
@@ -115,6 +139,37 @@ public class LinkedList<E> {
     public E removeFirst() { return removeAtIndex(0); }
 
     public E removeLast() { return removeAtIndex(size - 1); }
+
+    public void removeElement(E e) {
+        dummyHead = removeElement(dummyHead, e);
+    }
+
+    private Node removeElement(Node node, E e) {
+        if (node == null)
+            return null;
+        if (node.e != null && node.e.equals(e)) {
+            Node next = node.next;
+            node.next = null;
+            size--;
+            return next;
+        }
+        node.next = removeElement(node.next, e);
+        return node;
+    }
+
+    public void removeElementNR(E e) {  // 删除任意元素的非递归实现
+        Node prev = dummyHead;
+        for (int i = 0; i < size; i++) {
+            Node curr = prev.next;
+            if (curr != null && curr.e.equals(e)) {
+                prev.next = curr.next;
+                curr.next = null;
+                size--;
+                return;
+            }
+            prev = prev.next;
+        }
+    }
 
     /*
      * 查操作
