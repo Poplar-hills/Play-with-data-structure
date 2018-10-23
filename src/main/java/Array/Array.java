@@ -32,12 +32,21 @@ public class Array<E> {
     * Constructors
     * */
     public Array(int capacity) {
-        this.data = (E[]) new Object[capacity];
-        this.size = 0;
+        data = (E[]) new Object[capacity];
+        size = 0;
     }
 
     public Array() {
         this(10);
+    }
+
+    public Array(E[] arr) {  // 通过普通数组生成动态数组的构造函数
+        data = (E[]) new Object[arr.length];
+
+        for (int i = 0; i < arr.length; i++)
+            data[i] = arr[i];
+
+        size = arr.length;
     }
 
     /*
@@ -85,9 +94,7 @@ public class Array<E> {
         return removed;
     }
 
-    public E removeLast() {
-        return removeAtIndex(size - 1);
-    }
+    public E removeLast() { return removeAtIndex(size - 1); }
 
     public E removeFirst() {
         return removeAtIndex(0);
@@ -109,6 +116,15 @@ public class Array<E> {
         data[index] = e;
     }
 
+    public void swap(int i, int j) {
+        if (i < 0 || i >= size || j < 0 || j >= size)
+            throw new IllegalArgumentException("swap failed. Index is illegal.");
+
+        E temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
+    }
+
     /*
      * 查操作
      * */
@@ -119,9 +135,17 @@ public class Array<E> {
         return data[index];
     }
 
-    public E getFirst() { return get(0); }
+    public E getFirst() {
+        if (getSize() == 0)
+            throw new IllegalArgumentException("getFirst failed. Empty array.");
+        return get(0);
+    }
 
-    public E getLast() { return get(getSize() - 1); }
+    public E getLast() {
+        if (getSize() == 0)
+            throw new IllegalArgumentException("getLast failed. Empty array.");
+        return get(getSize() - 1);
+    }
 
     public int getSize() {
         return size;

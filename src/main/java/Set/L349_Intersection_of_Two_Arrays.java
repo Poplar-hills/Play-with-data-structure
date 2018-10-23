@@ -6,7 +6,7 @@ import java.util.*;
 
 public class L349_Intersection_of_Two_Arrays {
     public int[] intersection(int[] nums1, int[] nums2) {
-        HashSet<Integer> nums1Set = new HashSet<Integer>();
+        HashSet<Integer> nums1Set = new HashSet<Integer>();  // 也可以使用 TreeSet
         HashSet<Integer> intersection = new HashSet<Integer>();
 
         for (int num : nums1)
