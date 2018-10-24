@@ -62,7 +62,7 @@ public class MaxHeap<E extends Comparable<E>> {
     }
 
     private int getRightChildIndex(int index) {  // 返回用数组实现的完全二叉树中，一个索引处的元素在树中的右孩子的索引
-        return index * 2 + 2;
+        return getLeftChildIndex(index) + 1;
     }
 
     private void siftUp(int k) {
@@ -120,8 +120,6 @@ public class MaxHeap<E extends Comparable<E>> {
      * 查操作
      * */
     public E findMax() { return data.getFirst(); }
-
-    public E findMin() { return data.getLast(); }
 
     public int getSize() { return data.getSize(); }
 
