@@ -163,6 +163,27 @@ public class Trie {
         return true;
     }
 
+    public boolean search(String word) {  // 该方法除了具有 contains 的功能，还支持正则表达式中的"."，即可以匹配任何字母
+        return search(root, word, 0);
+    }
+
+    private boolean search(Node node, String word, int index) {
+        if (index == word.length())
+            return node.isEndOfWord;
+
+        char c = word.charAt(index);
+        if (c != '.') {
+            if (!node.next.containsKey(c))
+                return false;
+            return search(node.next.get(c), word, index + 1);
+        } else {
+            for (char key : node.next.keySet())
+                if (search(node.next.get(key), word, index + 1))
+                    return true;
+            return false;
+        }
+    }
+
     public int getSize() { return size; }
 
     public boolean isEmpty() { return size == 0; }

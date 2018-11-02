@@ -30,6 +30,14 @@ public class TrieTest {
         System.out.println(trie.contains("camel"));
         System.out.println(trie.contains("cattle"));
 
+        System.out.println("\nTesting search...");
+        System.out.println(trie.search("d.g"));
+        System.out.println(trie.search("d..r"));
+        System.out.println(trie.search("c.t"));
+        System.out.println(trie.search("c..t"));
+        System.out.println(trie.search("c..t.e"));
+        System.out.println(trie.search("c..z"));
+
         System.out.println("\nTesting delete...");
         trie.delete("cattle");
         trie.delete("deer");
