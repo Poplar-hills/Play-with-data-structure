@@ -2,7 +2,7 @@ package Trie;
 
 /*          root
  *        /     \
- *       d      c
+ *       d       c
  *      / |      \
  *     o  e       a
  *    /   |      / \
