@@ -11,7 +11,7 @@ import java.util.Random;
 * */
 
 public class PerformanceTest {
-    public static double testStack(Stack<Integer> stack, int opCount) {
+    private static double testStack(Stack<Integer> stack, int opCount) {
         Random random = new Random();
         long startTime = System.nanoTime();
 

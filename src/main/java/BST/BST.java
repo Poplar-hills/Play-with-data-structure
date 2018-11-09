@@ -32,11 +32,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BST<E extends Comparable> {  // 可比较的泛型
+public class BST<E extends Comparable<E>> {  // 可比较的泛型
     Node root;
     int size;
 
-    private class Node<E> {
+    private class Node {;
         private E e;
         private Node left, right;
 
