@@ -36,7 +36,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     Node root;
     int size;
 
-    private class Node {;
+    private class Node {
         private E e;
         private Node left, right;
 
@@ -143,7 +143,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             // 2. 用这个节点取代待删除节点的位置
             // 3. 删除待删除节点
             Node successor = getMin(node.right);
-            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先给 successor.right 赋值
+            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先给 successor.right 赋值 SEE: https://coding.imooc.com/learn/questiondetail/84029.html
             successor.left = node.left;  // 再给 successor.left 赋值，因为 removeMin 中要找到 node.right 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
             node.left = node.right = null;
             return successor;
@@ -175,25 +175,25 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     public E getMin() {  // 获取 BST 的最小值。因为每个节点的左孩子都比该节点小，因此整棵 BST 的最小值就在左下角的叶子节点上
         if (size == 0)
             throw new IllegalArgumentException("getMin failed. Empty tree");
-        return (E) getMin(root).e;
+        return getMin(root).e;
     }
 
-    private Node getMin(Node curr) {
-        if (curr.left == null)  // 终止条件是向左走到头，不再有左孩子的节点
-            return curr;
-        return getMin(curr.left);
+    private Node getMin(Node node) {
+        if (node.left == null)  // 终止条件是向左走到头，不再有左孩子的节点
+            return node;
+        return getMin(node.left);
     }
 
     public E getMax() {
         if (size == 0)
             throw new IllegalArgumentException("getMax failed. Empty tree");
-        return (E) getMax(root).e;
+        return getMax(root).e;
     }
 
-    private Node getMax(Node curr) {
-        if (curr.right == null)
-            return curr;
-        return getMax(curr.right);
+    private Node getMax(Node node) {
+        if (node.right == null)
+            return node;
+        return getMax(node.right);
     }
 
     /*
