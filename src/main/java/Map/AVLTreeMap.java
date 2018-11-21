@@ -1,13 +1,11 @@
 package Map;
 
-import javafx.util.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /*
  * - 这里使用 AVLTree 实现 Map
  * */
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
     private Node root;
@@ -56,79 +54,33 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         return node.height;
     }
 
+    public void inOrderTraverse(Node node, List<K> list) {
+        if (node == null)
+            return;
+        inOrderTraverse(node.left, list);
+        list.add(node.key);
+        inOrderTraverse(node.right, list);
+    }
+
     private int getBalanceFactor(Node node) {  // 计算平衡因子
         if (node == null)
             return 0;
         return getHeight(node.left) - getHeight(node.right);
     }
 
-    private boolean isBST(Node node) {  // 判断该二叉树是否是一棵二分搜索树。利用 BST 的特性 ——— 对 BST 进行中序遍历时，所有元素是被顺序访问的
-        List<K> keys = new ArrayList<>();
-        inOrderTraverse(node, keys);  // 将树上的每一个节点的 key 放入 keys 中
-
-        for (int i = 1; i < keys.size(); i++)
-            if (keys.get(i - 1).compareTo(keys.get(i)) > 0)  // 如果不是升序，则说明不是 BST
-                return false;
-        return true;
-    }
-
-    private void inOrderTraverse(Node node, List<K> keys) {
-        if (node == null)
-            return;
-        inOrderTraverse(node.left, keys);
-        keys.add(node.key);
-        inOrderTraverse(node.right, keys);
-    }
-
-    private boolean isBalanced() {  // 判断是否是平衡二叉树
-        return isBalanced(root);
-    }
-
-    private boolean isBalanced(Node node) {
-        if (node == null)
-            return true;
-        if (Math.abs(getBalanceFactor(node)) > 1)
-            return false;
-        return isBalanced(node.left) && isBalanced(node.right);
-    }
-
-    /*
-    *            y                     x
-    *          /   \      右旋       /    \
-    *         x    T4   ------>    z      y
-    *       / \                  / \     / \
-    *      z  T3                T1 T2   T3 T4
-    *    /  \
-    *  T1   T2
-    *
-    *  旋转后满足：
-    *    1. 平衡二叉树的性质：分析过程 SEE: https://coding.imooc.com/lesson/207.html#mid=14349  14'50''
-    *    2. 二分搜索树的性质：T1 < z < T2 < x < T3 < y < T4（旋转前后都满足）
-    * */
     private Node rightRotate(Node y) {
         Node x = y.left;
         Node T3 = x.right;
 
-        // 左旋转
         x.right = y;
         y.left = T3;
 
-        // 维护 x, y 的 height（其它节点高度不变，因为只有 x, y 的子树发生了变动）
-        y.height = 1 + Math.max(getHeight(y.left), getHeight(y.right));  // 需要先维护 y 的高度，因为 y 已经变成 x 的子节点了，有了 y 的高度才能计算 x 的高度
+        y.height = 1 + Math.max(getHeight(y.left), getHeight(y.right));
         x.height = 1 + Math.max(getHeight(x.left), getHeight(x.right));
 
-        return x;  // 返回旋转后的根节点
+        return x;
     }
 
-    /*
-     *       y                     x
-     *     /  \       左旋       /    \
-     *   T1    x    ------>    y      z
-     *       /  \            / \     / \
-     *     T2    z          T1 T2   T3 T4
-     *         /  \
-     *        T3  T4
-     * */
     private Node leftRotate(Node y) {
         Node x = y.right;
         Node T2 = x.left;
@@ -140,6 +92,32 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         x.height = 1 + Math.max(getHeight(x.left), getHeight(x.right));
 
         return x;
+    }
+
+    private Node maintainBalance(Node node) {  // add 或 remove 之后，路径上的所有节点都需要维护平衡
+        // 1. 更新 height
+        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+
+        // 2. 计算平衡因子
+        int balanceFactor = getBalanceFactor(node);
+
+        // 3. 恢复平衡
+        if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0)  // 当新添加结点在不平衡节点左子树的左子树上，即 LL 情况
+            return rightRotate(node);  // 返回保持平衡的 BST
+
+        if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0)  // 当新添加结点在不平衡节点右子树的右子树上，即 RR 情况
+            return leftRotate(node);
+
+        if (balanceFactor > 1 && getBalanceFactor(node.left) < 0) {  // 当新添加结点在不平衡节点左子树的右子树上，即 LR 情况
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+        if (balanceFactor < -1 && getBalanceFactor(node.right) > 0) { // 新添加结点在不平衡节点右子树的左子树上，即 RL 情况
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+
+        return node;
     }
 
     /*
@@ -160,82 +138,59 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         else
             node.value = value;
 
-        // 更新 height
-        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
-
-        // 计算平衡因子
-        int balanceFactor = getBalanceFactor(node);
-
-        // 恢复平衡
-        if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0)  // 当新添加结点在不平衡节点左子树的左子树上，即 LL 情况
-            return rightRotate(node);  // 返回保持平衡的 BST
-        if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0)  // 当新添加结点在不平衡节点右子树的右子树上，即 RR 情况
-            return leftRotate(node);
-        if (balanceFactor > 1 && getBalanceFactor(node.left) < 0) {  // 当新添加结点在不平衡节点左子树的右子树上，即 LR 情况
-            node.left = leftRotate(node.left);
-            return rightRotate(node);
-        }
-        if (balanceFactor < -1 && getBalanceFactor(node.right) > 0) { // 新添加结点在不平衡节点右子树的左子树上，即 RL 情况
-            node.right = rightRotate(node.right);
-            return leftRotate(node);
-        }
-
-        return node;
+        return maintainBalance(node);
     }
 
     /*
      * 删操作
      */
     public V remove(K key) {
-        Pair<Node, V> res = remove(root, key);
-        root = res.getKey();
-        return res.getValue();
+        Node node = getNode(root, key);
+        if (node != null) {
+            root = remove(root, key);
+            return node.value;
+        }
+        return null;
     }
 
-    private Pair<Node, V> remove(Node node, K key) {
+    private Node remove(Node node, K key) {
         if (node == null)
             return null;
 
+        Node retNode;  // 执行完删除逻辑的节点不要马上返回，先用变量接住
         if (key.compareTo(node.key) < 0) {
-            Pair<Node, V> res = remove(node.left, key);
-            node.left = res.getKey();
-            return new Pair<Node, V>(node, res.getValue());
-        } else if (key.compareTo(node.key) > 0) {
-            Pair<Node, V> res = remove(node.right, key);
-            node.right = res.getKey();
-            return new Pair<Node, V>(node, res.getValue());
-        } else {
+            node.left = remove(node.left, key);
+            retNode = node;
+        }
+        else if (key.compareTo(node.key) > 0) {
+            node.right = remove(node.right, key);
+            retNode = node;
+        }
+        else {
             if (node.left == null) {
                 Node rightNode = node.right;
                 node.right = null;
                 size--;
-                return new Pair<Node, V>(rightNode, node.value);
+                retNode = rightNode;
             }
-
-            if (node.right == null) {  // 如果待删除节点只有左子树，或左右都没有
+            else if (node.right == null) {
                 Node leftNode = node.left;
                 node.left = null;
                 size--;
-                return new Pair<Node, V>(leftNode, node.value);
+                retNode = leftNode;
             }
-
-            Node successor = getMin(node.right);
-            successor.right = removeMin(node.right);
-            successor.left = node.left;
-            node.left = node.right = null;
-            return new Pair<Node, V>(successor, node.value);
+            else {
+                Node successor = getMin(node.right);
+                successor.right = remove(node.right, successor.key);  // BST 中此处用的是 removeMin(node.right)，但 removeMin 方法中没有维护平衡，所以此处这样
+                successor.left = node.left;
+                node.left = node.right = null;
+                retNode = successor;
+            }
         }
-    }
 
-    private Node removeMin(Node node) {
-        if (node.left == null) {
-            Node rightNode = node.right;
-            node.right = null;
-            size--;
-            return rightNode;
-        }
-        node.left = removeMin(node.left);
-        return node;
+        return retNode != null  // 删除节点之后有可能得到的是空节点（如删除叶子节点），此时就不需要维护平衡了
+                ? maintainBalance(retNode)
+                : null;
     }
 
     /*
@@ -294,5 +249,32 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             s.append(", ");
             toString(node.right, s);
         }
+    }
+
+    /*
+    * AVLTree 检测方法
+    * */
+    public Node getRoot() { return root; }
+
+    public boolean isBST(Node node) {  // 判断该二叉树是否是一棵二分搜索树。利用 BST 的特性 ——— 对 BST 进行中序遍历时，所有元素是被顺序访问的
+        List<K> keys = new ArrayList<>();
+        inOrderTraverse(node, keys);  // 将树上的每一个节点的 key 放入 keys 中
+
+        for (int i = 1; i < keys.size(); i++)
+            if (keys.get(i - 1).compareTo(keys.get(i)) > 0)  // 如果不是升序，则说明不是 BST
+                return false;
+        return true;
+    }
+
+    public boolean isBalanced() {  // 判断是否是平衡二叉树
+        return isBalanced(root);
+    }
+
+    private boolean isBalanced(Node node) {
+        if (node == null)
+            return true;
+        if (Math.abs(getBalanceFactor(node)) > 1)
+            return false;
+        return isBalanced(node.left) && isBalanced(node.right);
     }
 }
