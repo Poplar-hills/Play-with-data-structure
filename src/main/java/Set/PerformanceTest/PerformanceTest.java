@@ -4,16 +4,17 @@ import Set.Set;
 import Set.BSTSet;
 import Set.LinkedListSet;
 import Set.TrieSet;
+import Set.AVLTreeSet;
 
 import java.util.ArrayList;
 
 /*
 * - 从结果可见 BSTSet 的效率比 LinkedListSet 高10倍左右
 * - 集合的时间复杂度分析：
-*               LinkedListSet     BSTSet   BSTSet(平均)  BSTSet(最差)   TrieSet
-*   增 add          O(n)           O(h)      O(logn)        O(n)         O(w)
-*   查 contains     O(n)           O(h)      O(logn)        O(n)         O(w)
-*   删 remove       O(n)           O(h)      O(logn)        O(n)         O(w)
+*               LinkedListSet     BSTSet   BSTSet(平均)  BSTSet(最差)   TrieSet    AVLTreeSet
+*   增 add          O(n)           O(h)      O(logn)        O(n)         O(w)      O(logn)
+*   查 contains     O(n)           O(h)      O(logn)        O(n)         O(w)      O(logn)
+*   删 remove       O(n)           O(h)      O(logn)        O(n)         O(w)      O(logn)
 *
 * - 三种操作在 BST 实现中的时间复杂度都是 O(h)，其中 h 为 BST 的最大深度（因为 BST 是二分操作，所以最终访问到的元素只有
 *    从根节点到某叶子节点路径上的所有节点）
@@ -27,8 +28,9 @@ import java.util.ArrayList;
 *      的时间复杂度很大程度上取决于数据的排列顺序。
 * - 如果一种算法的时间复杂度是 O(logn)，则它是非常非常快的，介于 O(1) 和 O(O√n) 之间，远比 O(n) 快。很多高级的排序算法是 O(nlogn)。
 * - See: https://coding.imooc.com/lesson/207.html#mid=13705
-* - 该测试中 TrieSet 的耗时比 BSTSet 要快一半，这是因为，对于6530个词的文章来说，O(logn) 大概是13，而 Trie 的时间复杂度
+* - 该测试中 TrieSet 比 BSTSet 要快一半，这是因为，对于6530个词的文章来说，O(logn) 大概是13，而 Trie 的时间复杂度
 *   跟数据条数无关，只跟要查询的字符串的长度 w 相关，即 O(w)，而大对数英语单词的长度都在10以下。
+* - 该测试中 AVLTreeSet 比 TrieSet 还要快一半，因为 AVLTree 是时刻保持平衡，即不会出现 BST 退化成链表的问题。
 * */
 
 public class PerformanceTest {
@@ -51,16 +53,20 @@ public class PerformanceTest {
     }
 
     public static void main(String[] args) {
+        LinkedListSet<String> linkedListSet = new LinkedListSet<String>();
+        double time1 = testSet(linkedListSet);
+        System.out.println("LinkedListSet: " + time1 + " s\n");
+
         BSTSet<String> bstSet = new BSTSet<String>();
-        double time1 = testSet(bstSet);
-        System.out.println("BSTSet: " + time1 + " s\n");
+        double time2 = testSet(bstSet);
+        System.out.println("BSTSet: " + time2 + " s\n");
 
         TrieSet trieSet = new TrieSet();
-        double time2 = testSet(trieSet);
-        System.out.println("TrieSet: " + time2 + " s\n");
+        double time3 = testSet(trieSet);
+        System.out.println("TrieSet: " + time3 + " s\n");
 
-        LinkedListSet<String> linkedListSet = new LinkedListSet<String>();
-        double time3 = testSet(linkedListSet);
-        System.out.println("LinkedListSet: " + time3 + " s");
+        AVLTreeSet<String> avlTreeSet = new AVLTreeSet<String>();
+        double time4 = testSet(avlTreeSet);
+        System.out.println("AVLTreeSet: " + time4 + " s");
     }
 }
