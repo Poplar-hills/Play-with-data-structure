@@ -1,7 +1,7 @@
 package RedBlackTree;
 
 /*
-* - Java 的 TreeMap 的底层使用的是红黑树。
+* - Java 的 TreeMap、TreeSet 的底层使用的是红黑树。
 * - 算法导论中的定义：A red-black tree is a BST that satisfies the following properties:
 *   1. Every node is either red or black.
 *   2. The root is black.
@@ -12,7 +12,7 @@ package RedBlackTree;
 * - 这种定义方式比较生硬，没有解释清楚为什么会出现这样一种数据结构，更好的解释出自《算法》。其中首先探索了另一种平衡树 —— 2-3树。
 * - 实际上2-3树与红黑树是等价的，如果理解了2-3树和红黑树之间的等价关系就理解了上面这5条性质的由来。
 *
-* - 2-3树（2-3 Tree）：
+* - 2-3树：A 2–3 tree is a B-tree with at most 3 elements per node.
 *                         43
 *                     /        \
 *                 17 33         50
@@ -32,18 +32,24 @@ package RedBlackTree;
 *               17 - 33        50         其中 17 是红节点
 *              / |   \      /     \
 *        6 - 12  18  37   48  66 - 88     其中 6 和 66 是红节点
-*   这样即化简了2-3树的复杂度，又保留了2-3树能够保持绝对平衡的性质。
+*   这样即化简了2-3树的复杂度，又保留了2-3树的功能。但要注意：将2-3树的一个3节点拆成两个节点使得红黑树不再是标准的平衡二叉树，它保持的
+*   是"黑平衡"（即只考虑黑节点时是平衡的），因此可以说它牺牲了平衡性来获得更好的统计性能。
+* - 这里我们讲解和实现的都是"左倾红黑树"，即红色节点是黑节点的左子节点；实际上也可以实现成"右倾红黑树"。
 * - 任意一棵2-3树都可以通过这样的方式转化成一颗红黑树。
 *
 * - 红黑树复杂度分析：
-*   - 如果树上有 n 个节点，在最坏情况下（每个黑节点旁边都有一个红节点），则树的最大高度是 2logn，因此增删改查操作的复
-*     杂度都是 O(logn) 级别的。
+*   - 如果有 n 个节点，在最坏情况下（每个黑节点旁边都有一个红节点），则树的最大高度是 2logn，因此增删改查操作的复杂度都是 O(logn) 级别的。
 *   - 因为最大高度为 2logn，大于 AVL 的最大高度 logn，因此在红黑树上的查询操作会比 AVL 树慢一点。而红黑树的添加、删除操作
 *     是要比 AVL 树快的。因此，如果需要在树上频繁添加、删除元素的情况，用红黑树效率会更高。而如果树上的元素几乎不会变动，在
 *     整棵树被创建完之后只做查询操作的话，用 AVL 树效率更好一点。
+*   - 与 BST、AVL 的比较：
+*     - 对于完全随机的数据，普通的 BST 就很好用了（完全随机数据不会使 BST 退化成链表），不需要那么多复杂的维持平衡的逻辑。
+*     - 对于查询、更新（get、set、contains）操作较多的情况，AVLTree 很好用。
+*     - 红黑树的统计性能（统一复杂度级别内的性能统计）最优，即综合了增、删、改、查操作。
+*   - 注：我们这里实现的红黑树并不是性能最优的版本，只是为了讲解其原理。
 * */
 
-public class RedBlackTree<K extends Comparable<K>, V> {
+public class RedBlackTree<K extends Comparable<K>, V> {  // 此处实现的红黑树的节点是键值对，不同于之前实现的 BST 或 AVLTree（当然也可以实现成只有键的）
     private Node root;
     private int size;
     private static final boolean RED = true;

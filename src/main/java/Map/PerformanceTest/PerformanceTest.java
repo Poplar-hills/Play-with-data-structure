@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * - 根据 Map 的底层实现分类，Map 也可以分为"有序映射"和"无序映射"（即映射中的 key 是否具有顺序性，是否可以方便地从小到大遍历）。
  *   - 有序映射可通过 BST 实现（我们实现的 BSTMap 就是有序映射）
  *   - 无序映射可通过哈希表实现（联想 JS 中的普通对象和 Map 的区别）
+ *   - 注："有序性"的解释 SEE: https://coding.imooc.com/learn/questiondetail/81002.html
  *
  * - AVLTreeMap 比 BSTMap 大约快三分之一，因为 AVLTreeMap 通过保持平衡解决了 BSTMap 的可能退化成链表形态的问题，
  *   因此效率更高。具体 SEE: AVLTree.java

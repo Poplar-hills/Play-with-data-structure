@@ -10,6 +10,7 @@ import BST.BST;
 *   第k大元素(select)和某个元素是第几大元素(rank)。
 * - 通常使用 BST，有序数组或者有序链表，都可以作为“有序集合”的底层实现。只不过这里我们实现的 BSTSet 没有为我们的二分搜索
 *   树实现上述接口。
+* - 注："有序性"的解释 SEE: https://coding.imooc.com/learn/questiondetail/81002.html
 * - 基于无序链表、无序数组、哈希表实现的 Set 则是"无序集合"，即集合中的元素没有顺序性。
 * */
 
