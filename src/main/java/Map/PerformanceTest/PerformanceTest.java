@@ -1,6 +1,7 @@
 package Map.PerformanceTest;
 
 import Map.LinkedListMap;
+import Map.HashMap;
 import Map.BSTMap;
 import Map.AVLTreeMap;
 import Map.Map;
@@ -11,12 +12,10 @@ import java.util.ArrayList;
 /*
  * - 经过和 Set 中一样的词频统计测试，BSTMap 的效率是 LinkedListMap 的50倍左右。
  * - 时间复杂度分析：
- *             LinkedListMap     BSTMap   BSTMap(平均)   BSTMap(最差)   AVLTreeMap
- *   add           O(n)           O(h)      O(logn)         O(n)         O(logn)
- *   remove        O(n)           O(h)      O(logn)         O(n)         O(logn)
- *   set           O(n)           O(h)      O(logn)         O(n)         O(logn)
- *   get           O(n)           O(h)      O(logn)         O(n)         O(logn)
- *   contains      O(n)           O(h)      O(logn)         O(n)         O(logn)
+ *
+ *   LinkedListMap   BSTMap   BSTMap(平均)   BSTMap(最差)   AVLTreeMap   HashMap(红黑树版)(平均)   HashMap(链表)(平均)
+ *       O(n)         O(h)      O(logn)         O(n)        O(logn)          O(log(n/M))              O(n/M)
+ *
  *  (为什么 BST 的复杂度是 O(h)? h 与 n 的关系是什么? 这两个问题可以自己手动推导一遍)
  *
  * - 根据 Map 的底层实现分类，Map 也可以分为"有序映射"和"无序映射"（即映射中的 key 是否具有顺序性，是否可以方便地从小到大遍历）。
@@ -26,6 +25,10 @@ import java.util.ArrayList;
  *
  * - AVLTreeMap 比 BSTMap 大约快三分之一，因为 AVLTreeMap 通过保持平衡解决了 BSTMap 的可能退化成链表形态的问题，
  *   因此效率更高。具体 SEE: AVLTree.java
+ *
+ * - HashMap 比 AVLTreeMap 更快，因为 HashMap 用空间换时间 -- 大小为 M 的数组通过哈希值随机访问的复杂度为 O(1)，只有在哈希冲突时
+ *   才使用 O(logn) 的红黑树，因此平均起来的复杂度是 O(log(n/M))。Java 中的 HashMap 的实现用的是链表+红黑树，即在？？？，而在的时候转换成
+ *   红黑树，因此速度会更快。
  * */
 
 public class PerformanceTest {
@@ -62,5 +65,9 @@ public class PerformanceTest {
         AVLTreeMap<String, Integer> avlTreeMap = new AVLTreeMap<String, Integer>();
         double time3 = testMap(avlTreeMap);
         System.out.println("AVLTreeMap: " + time3 + " s\n");
+
+        HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+        double time4 = testMap(hashMap);
+        System.out.println("HashMap: " + time4 + " s\n");
     }
 }
