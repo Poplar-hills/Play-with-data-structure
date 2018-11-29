@@ -43,8 +43,14 @@ import java.util.TreeMap;
  *   - 当哈希冲突时，我们需要的实际上不一定是"链表"，而只要是一种查找表就可以，因此可以是链表，也可以是树结构。这样整个 hashTable
  *     实际上就是一个 TreeMap 数组（如果要实现的是 HashSet 则是一个 TreeSet 数组）。
  *   - 在 Java8 之前，每个位置对应的就是一个链表；从 Java8 开始，每个位置对应的先是一个链表，当哈希冲突到达一定程度时，会自动将每个
- *     位置上的链表转换成红黑树（即 TreeMap）。这是因为在哈希冲突较少时（如5以内）链表就够快了，而且开销比红黑树低（不需要各种旋转）。
+ *     位置上的链表转换成红黑树（即 TreeMap）。这是因为在哈希冲突较少时（如3以内）链表就够快了，而且开销比红黑树低（不需要各种旋转）。
  *   - 这里我们实现的 hashTable 只采用 TreeMap 以保持简单。
+ *   - 在哈希冲突过多的原因：1.哈希表设计有问题（如开辟的数组太小，即 M 太小） 2.数据有问题（如全是一个数）。对于第一个问题，当要存
+ *     入 hashTable 的数据集的大小是动态的时候，M 的取值太小也应该是动态的，即开辟的数组大小应该能动态 resize。
+ *     - resize 的条件：
+ *       1. 当数组中每个位置平均承载的元素个数多过一定程度时扩容：n / M >= upperTol（容忍度上线）
+ *       2. 当数组中每个位置平均承载的元素个数少过一定程度时缩容：n / M <= lowerTol（容忍度下线）
+ *     - resize 的原理：和之前实现的数组是一致的，即把现有的 hashTable 中的数据搬到新创建的扩容或缩容之后的 hashTable 中。
  *
  * - hashCode 方法只用于计算哈希值，但当产生哈希冲突的时候（两个不同对象计算出了相同的哈希值），仍然需要比较两个对象是否相等。比如，
  *   如果要使用 Student 类实例作为 HashSet 的元素或 HashMap 的 key 的话d，光有 hashCode 方法还不够，还需要 equals 方法在产出哈希
@@ -52,9 +58,13 @@ import java.util.TreeMap;
  * */
 
 public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比较的方式变成了比哈希值，因此只需要实现 hashCode 方法即可，而 hashCode 方法是定义在 Object 上的，所有变量都有。
+    private static final int upperTol = 10;  // 数组中每个位置平均最多存储10个元素，>= 10 的话就要扩容
+    private static final int lowerTol = 2;   // <= 2 的话就要缩容
+    private static final int initCapacity = 7;   // 数组的初始容量
+
     private TreeMap<K, V>[] hashTable;  // 哈希表实际上是一个 TreeMap 数组
-    private int M;  //
-    private int size;
+    private int M;     // 开辟的数组大小
+    private int size;  // 元素个数，即 n
 
     public HashTable(int M) {
         this.M = M;
@@ -65,7 +75,31 @@ public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比
     }
 
     public HashTable() {
-        this(97);
+        this(initCapacity);
+    }
+
+    /*
+    * 辅助方法
+    * */
+    private void resize(int newM) {
+        // 开辟新数组的空间
+        TreeMap<K, V>[] newHashTable = new TreeMap[newM];
+
+        // 初始化新数组
+        for (int i = 0; i < newM; i++)
+            newHashTable[i] = new TreeMap<>();
+
+        // 将旧 hashTable 中的每一颗 TreeMap 上的每一个键值对拿出来，然后重新 hash 并放入新 hashTable 里
+        int oldM = this.M;
+        this.M = newM;  // 因为下面用到 hash 方法，而 hash 方法内部用到的 M 应该是 newM，因此这里要更新才行
+        for (int i = 0; i < oldM; i++) {  // 而这行的 M 又需要的是旧的 M，因此要在上面保存一下就的 M 给这里用
+            TreeMap<K, V> map = hashTable[i];
+            for (K key : map.keySet())
+                newHashTable[hash(key)].put(key, map.get(key));
+        }
+
+        // 更新
+        this.hashTable = newHashTable;
     }
 
     // 此处的哈希函数做了2件事：
@@ -82,9 +116,12 @@ public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比
         TreeMap<K, V> map = hashTable[hash(key)];
         if (map.containsKey(key))  // 如果已经存在，则做更新操作（相当于 set）
             map.put(key, value);
-        else {
+        else {  // 不存在则添加
             map.put(key, value);
             size++;
+
+            if (size >= upperTol * M)  // 小技巧，相当于 if ((float) size / M >= upperTol)。因为2个 int 相除会丢掉小数位，想保留的话就要转成 float。
+                resize(M * 2);
         }
     }
 
@@ -97,6 +134,9 @@ public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比
         if (map.containsKey(key)) {
             ret = map.remove(key);
             size--;
+
+            if (size <= lowerTol * M && M / 2 > initCapacity)  // 注意除法分母不能为零，这里我们让它不小于 initCapacity
+                resize(M / 2);  // 缩容
         }
         return ret;
     }

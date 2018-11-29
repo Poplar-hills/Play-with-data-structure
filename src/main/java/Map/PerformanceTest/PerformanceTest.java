@@ -27,8 +27,10 @@ import java.util.ArrayList;
  *   因此效率更高。具体 SEE: AVLTree.java
  *
  * - HashMap 比 AVLTreeMap 更快，因为 HashMap 用空间换时间 -- 大小为 M 的数组通过哈希值随机访问的复杂度为 O(1)，只有在哈希冲突时
- *   才使用 O(logn) 的红黑树，因此平均起来的复杂度是 O(log(n/M))。Java 中的 HashMap 的实现用的是链表+红黑树，即在？？？，而在的时候转换成
- *   红黑树，因此速度会更快。
+ *   才使用 O(logn) 的红黑树或者 O(n) 的链表，因此平均起来的复杂度是 O(log(n/M)) 或 O(n/M)。注意是"平均"，而最坏的情况是 n 个元
+ *   素全部哈希冲突，都挤在数组的同一个位置上，此时哈希表退化成了一棵大红黑树或一个大链表，数组其它位置上都是空，此时的复杂度就退化成了
+ *   O(logn) 或 O(n)。因此情况发生的原因不是哈希表设计有问题（如 M 太小）就是数据有问题。M 取值太小的问题可以通过动态扩容的解决，
+ *   SEE: HashTable.java
  * */
 
 public class PerformanceTest {
