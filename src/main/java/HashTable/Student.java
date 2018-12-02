@@ -1,5 +1,11 @@
 package HashTable;
 
+/*
+ * - hashCode 方法只用于计算哈希值，但当产生哈希冲突的时候（两个不同对象计算出了相同的哈希值），仍然需要比较两个对象是否相等。比如，
+ *   如果要使用 Student 类实例作为 HashSet 的元素或 HashMap 的 key 的话d，光有 hashCode 方法还不够，还需要 equals 方法在产出哈希
+ *   冲突的时候比较两个对象是否相同。
+ * */
+
 public class Student {
     private int grade;
     private int clazz;

@@ -51,31 +51,43 @@ import java.util.TreeMap;
  *       1. 当数组中每个位置平均承载的元素个数多过一定程度时扩容：n / M >= upperTol（容忍度上线）
  *       2. 当数组中每个位置平均承载的元素个数少过一定程度时缩容：n / M <= lowerTol（容忍度下线）
  *     - resize 的原理：和之前实现的数组是一致的，即把现有的 hashTable 中的数据搬到新创建的扩容或缩容之后的 hashTable 中。
+ *   - 像数组的 resize 一样，hashTable 的时间复杂度也是可以均摊到 add 或 remove 操作中计算的，即当元素数从 n 增加到 n * upperTol
+ *     （即数组的每个位置上存储的元素个数都达到上限） 时，数组会被 resize，从而使得地址空间倍增。其中：
+ *       1. 元素数从 n 增加到 n * upperTol，增加了 n * upperTol - n 个元素，即运行了 n * upperTol - n 多次 add/remove 操作。
+ *       2. resize 地址空间倍增的时间复杂度是 O(n) 级别的（比如 M * 2）
+ *     因此，将 resize 的复杂度平摊到每一次 add/remove 操作上：2M / (n * upperTol - n) < 1。因此 add/remove 操作加上 resize
+ *     的总时间复杂度是小于 O(2) 的，因此还是 O(1) 级别的。
+ *   - 之前在讲数组动态扩容的时候我们是简单的把容量乘以2，而 hashTable 的扩容不太一样，因为我们希望 hashTable 的数组容量 M 是一个
+ *     素数，从而使哈希值分布地更均匀，因此直接扩容到 2M 会破坏这一点。更好的做法是建立一个素数数组，每次扩容的时候从该素数数组中取出
+ *     下一个素数作为新的数组容量。
  *
- * - hashCode 方法只用于计算哈希值，但当产生哈希冲突的时候（两个不同对象计算出了相同的哈希值），仍然需要比较两个对象是否相等。比如，
- *   如果要使用 Student 类实例作为 HashSet 的元素或 HashMap 的 key 的话d，光有 hashCode 方法还不够，还需要 equals 方法在产出哈希
- *   冲突的时候比较两个对象是否相同。
+ *  - 哈希表与平衡树的比较：
+ *    1. 哈希表的复杂度比平衡树低：哈希表为 O(1)；平衡树为 O(logn)
+ *    2. 但有得必有失，哈希表牺牲了顺序性；而平衡树维护了所存数据的顺序性（可以快速获得最大值、最小值、第 k 个值、某个元素的 rank、
+ *       predecessor、successor 等）。
+ *    - Set, Map 这两种抽象数据结构底层实现可以是链表、树、哈希表。但根据是否保留数据的顺序性，我们可以将它们分类如下：
+ *      1. 有序集合、有序映射：底层是平衡树（在 java 中对应的是 TreeSet, TreeMap）
+ *      2. 无序集合、无序映射：底层是哈希表（在 java 中对应的是 HashSet, HashMap）
  * */
 
 public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比较的方式变成了比哈希值，因此只需要实现 hashCode 方法即可，而 hashCode 方法是定义在 Object 上的，所有变量都有。
     private static final int upperTol = 10;  // 数组中每个位置平均最多存储10个元素，>= 10 的话就要扩容
     private static final int lowerTol = 2;   // <= 2 的话就要缩容
-    private static final int initCapacity = 7;   // 数组的初始容量
+    private final int[] capacity = { 53, 97, 193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317,
+            196613, 393241, 786433, 1572869, 3145739, 6291469, 12582917, 25165843, 50331653, 100663319,
+            201326611, 402653189, 805306457, 1610612741};
+    private int capacityIndex = 0;   // 数组的初始容量索引
 
     private TreeMap<K, V>[] hashTable;  // 哈希表实际上是一个 TreeMap 数组
     private int M;     // 开辟的数组大小
     private int size;  // 元素个数，即 n
 
-    public HashTable(int M) {
-        this.M = M;
+    public HashTable() {
+        this.M = capacity[capacityIndex];
         size = 0;
         hashTable = new TreeMap[M];
         for (int i = 0; i < M; i++)
             hashTable[i] = new TreeMap<K, V>();
-    }
-
-    public HashTable() {
-        this(initCapacity);
     }
 
     /*
@@ -120,8 +132,8 @@ public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比
             map.put(key, value);
             size++;
 
-            if (size >= upperTol * M)  // 小技巧，相当于 if ((float) size / M >= upperTol)。因为2个 int 相除会丢掉小数位，想保留的话就要转成 float。
-                resize(M * 2);
+            if (size >= upperTol * M && capacityIndex + 1 < capacity.length)  // 小技巧，相当于 if ((float) size / M >= upperTol)。因为2个 int 相除会丢掉小数位，想保留的话就要转成 float。
+                resize(capacity[++capacityIndex]);
         }
     }
 
@@ -135,8 +147,8 @@ public class HashTable<K, V> {  // K 不再需要 extends Comparable，因为比
             ret = map.remove(key);
             size--;
 
-            if (size <= lowerTol * M && M / 2 > initCapacity)  // 注意除法分母不能为零，这里我们让它不小于 initCapacity
-                resize(M / 2);  // 缩容
+            if (size <= lowerTol * M && capacityIndex - 1 >= 0)  // 注意除法分母不能为零，这里我们让它不小于 initCapacity
+                resize(capacity[--capacityIndex]);  // 缩容
         }
         return ret;
     }
