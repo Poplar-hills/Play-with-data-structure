@@ -2,26 +2,19 @@ package Array;
 
 /*
  * Complexity Analysis
- * Array<E>
- *     - void addAtIndex(E e);  O(n) 均摊
- *     - void addLast();        O(1)
- *     - void addFirst();       O(n)
+ * - 增操作：
+ *   - addLast 的复杂度是 O(1)；
+ *   - addFirst 是 O(n)；
+ *   - addAtIndex 则与 index 取值相关，若 index = 1 则是 O(n)，若 index = size - 1 则是 O(1)；
+ *     但平均来说是 O(n/2)，因此还是 O(n) 级别。
+ *   - 对于 addLast 来说，它一般是 O(1)，但如果发生 resize，就变成了 O(n)。因此 addLast 最坏情况下是 O(n) 级别的复杂度。
+ *     但因为 resize 不是每次增操作都会发生，因此可以将其复杂度均摊到每次增操作中（此时均摊复杂度比最坏情况下的复杂度更有意义）。
+ *     均摊之后 addLast 仍然是 O(1)。
+ *   - 总的来看，增操作的时间复杂度是 O(n)。
+ * - 删操作：同理也是 O(n)
+ * - 改操作：已知索引的（如 set、swap）是 O(1)；未知索引的是 O(n)
+ * - 查操作：已知索引的（如 get、getFirst）是 O(1)；未知索引的（如 contains, findIndex）是 O(n)
  *
- *     - E removeAtIndex();
- *     - E removeLast();        O(1)
- *     - E removeFirst();       O(n)
- *     - E removeElement();
- *
- *     - void set();            O(1)
- *
- *     - E get();               O(1)
- *     - E getFirst();          O(1)
- *     - E getLast();           O(1)
- *     - int getSize();         O(1)
- *     - int getCapacity();     O(1)
- *     - boolean isEmpty();     O(1)
- *     - int findIndex(E e);
- *     - boolean contains(E e);
  * */
 
 public class Array<E> {
@@ -59,9 +52,8 @@ public class Array<E> {
         if (size == getCapacity())
             resize(getCapacity() * 2);
 
-        for(int i = size - 1; i >= index; i--) {
+        for(int i = size - 1; i >= index; i--)
             data[i + 1] = data[i];
-        }
         data[index] = e;
         size++;
     }
@@ -82,9 +74,8 @@ public class Array<E> {
             throw new IllegalArgumentException("removeAtIndex failed. Require index >= 0 and index < size");
 
         E removed = data[index];
-        for (int i = index + 1; i < size; i++) {
+        for (int i = index + 1; i < size; i++)
             data[i - 1] = data[i];
-        }
         data[size - 1] = null;  // set the loitering object to null
         size--;
 
@@ -160,10 +151,9 @@ public class Array<E> {
     }
 
     public int findIndex(E e) {
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
             if (data[i].equals(e))
                 return i;
-        }
         return -1;
     }
 
@@ -190,9 +180,8 @@ public class Array<E> {
     * */
     private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity];
-        for(int i = 0; i < size; i++) {
+        for(int i = 0; i < size; i++)
             newData[i] = data[i];
-        }
         data = newData;
     }
 }
