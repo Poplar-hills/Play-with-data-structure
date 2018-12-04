@@ -7,21 +7,21 @@ public class L20_Valid_Parentheses {
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<Character>();
 
-        for (int i = 0; i < s.length(); i++) {
-            Character c = s.charAt(i);
-            if (this.isOpenningBracket(c)) stack.push(c);
-            else if (stack.isEmpty() || !this.match(stack.pop(), c)) return false;
+        for (char c : s.toCharArray()) {
+            if (this.isOpenningBracket(c))
+                stack.push(c);
+            else if (stack.isEmpty() || !this.match(stack.pop(), c))
+                return false;
         }
 
         return stack.isEmpty();
     }
 
-    private boolean isOpenningBracket(Character c) {
+    private boolean isOpenningBracket(char c) {
         return c == '{' || c == '[' || c == '(';
     }
 
-    private boolean match(Character s1, Character s2) {
-        String str = s1.toString() + s2.toString();
-        return str.equals("()") || str.equals("[]") || str.equals("{}");
+    private boolean match(char s1, char s2) {
+        return (c1 == '(' && c2 == ')') || (c1 == '[' && c2 == ']') || (c1 == '{' && c2 == '}');
     }
 }
