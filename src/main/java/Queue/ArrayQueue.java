@@ -3,13 +3,14 @@ package Queue;
 import Array.Array;
 
 /*
-* Complexity Analysis
-* ArrayQueue<E>
-*     - void enqueue(E e);  O(n) 均摊
-*     - E dequeue();        O(n)
-*     - E getFront();       O(1)
-*     - int getSize();      O(1)
-*     - boolean isEmpty();  O(1)
+* - 相对于 Stack 的先入后出，Queue 是先入先出。
+* - 最基本队列是基于数组的，只需要做一些限制：只能从数组尾部入队，而从头部出队
+* - Complexity Analysis
+*   - void enqueue(E e);  O(1) 均摊
+*   - E dequeue();        O(n) 因为要从数组头部移除元素
+*   - E getFront();       O(1)
+*   - int getSize();      O(1)
+*   - boolean isEmpty();  O(1)
 * */
 
 public class ArrayQueue<E> implements Queue<E> {

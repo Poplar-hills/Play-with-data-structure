@@ -29,9 +29,7 @@ public class Array<E> {
         size = 0;
     }
 
-    public Array() {
-        this(10);
-    }
+    public Array() { this(10); }
 
     public Array(E[] arr) {  // 通过普通数组生成动态数组的构造函数
         data = (E[]) new Object[arr.length];
@@ -58,13 +56,9 @@ public class Array<E> {
         size++;
     }
 
-    public void addLast(E e) {
-        addAtIndex(size, e);
-    }
+    public void addLast(E e) { addAtIndex(size, e); }
 
-    public void addFirst(E e) {
-        addAtIndex(0, e);
-    }
+    public void addFirst(E e) { addAtIndex(0, e); }
 
     /*
      * 删操作
@@ -87,9 +81,7 @@ public class Array<E> {
 
     public E removeLast() { return removeAtIndex(size - 1); }
 
-    public E removeFirst() {
-        return removeAtIndex(0);
-    }
+    public E removeFirst() { return removeAtIndex(0); }
 
     public void removeElement(E e) {
         int index = findIndex(e);
@@ -103,14 +95,12 @@ public class Array<E> {
     public void set(int index, E e) {
         if (index < 0 || index >= size)
             throw new IllegalArgumentException("set failed. Require index >= 0 and index < size");
-
         data[index] = e;
     }
 
     public void swap(int i, int j) {
         if (i < 0 || i >= size || j < 0 || j >= size)
             throw new IllegalArgumentException("swap failed. Index is illegal.");
-
         E temp = data[i];
         data[i] = data[j];
         data[j] = temp;
@@ -122,7 +112,6 @@ public class Array<E> {
     public E get(int index) {
         if (index < 0 || index >= size)
             throw new IllegalArgumentException("get failed. Require index >= 0 and index < size");
-
         return data[index];
     }
 
@@ -138,17 +127,11 @@ public class Array<E> {
         return get(getSize() - 1);
     }
 
-    public int getSize() {
-        return size;
-    }
+    public int getSize() { return size; }
 
-    public int getCapacity() {
-        return data.length;
-    }
+    public int getCapacity() { return data.length; }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    public boolean isEmpty() { return size == 0; }
 
     public int findIndex(E e) {
         for (int i = 0; i < size; i++)
@@ -157,9 +140,7 @@ public class Array<E> {
         return -1;
     }
 
-    public boolean contains(E e) {
-        return findIndex(e) != -1;
-    }
+    public boolean contains(E e) { return findIndex(e) != -1; }
 
     @Override
     public String toString() {
