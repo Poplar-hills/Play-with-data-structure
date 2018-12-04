@@ -11,6 +11,7 @@ import Array.Array;
 *   - E getFront();       O(1)
 *   - int getSize();      O(1)
 *   - boolean isEmpty();  O(1)
+* - 可见 ArrayQueue 的性能问题在于出队操作是 O(n) 复杂度，我们可以使用循环队列解决这一问题，实现 SEE: LoopQueue
 * */
 
 public class ArrayQueue<E> implements Queue<E> {
