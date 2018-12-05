@@ -3,13 +3,22 @@ package Queue;
 /*
 * - 循环队列的意义是为了解决普通队列在 dequeue 的时候效率低（复杂度是 O(n)）的问题。
 * - LoopQueue 特点是在 dequeue 操作之后不前移所有元素，而是引入 front、tail 两个指针，充分利用 dequeue 之后空出来的位置。
-* - 队列为空时：front == tail。
-* - 队列已满时：
-*   - 如果队列中没有循环：|0|1|2|3|4| |，此时 front 指0，tail 指最后的空元素。
-*   - 如果队列中有循环（有过 dequeue 操作）：|0|1|2|3|4| | -> |n|1|2|3|4|5| -> |6|n|2|3|4|5|，此时 front 指2，tail 指6后面的 null。
-*   - 统一这2种情况：当 front == (tail + 1) % data.length 时，队列已满。
-* - LoopQueue 会有意将一个位置空出来，不保存新元素，以保证队列为空和队列已满时的条件不都是 front == tail。
-* - 因为循环队列的机制已经不同于 Array 了，因此不能像 ArrayStack 或 ArrayQueue 一样基于 Array 实现。
+* - 循环队列 enqueue、dequeue 的过程：
+*                  | | | | | |   front=0, tail=0
+*     enqueue(a):  |a| | | | |   front=0, tail=1
+*     enqueue(b):  |a|b| | | |   front=0, tail=2
+*     enqueue(c):  |a|b|c| | |   front=0, tail=3
+*     enqueue(d):  |a|b|c|d| |   front=0, tail=4（此时队列已满）
+*     dequeue() :  | |b|c|d| |   front=1, tail=4
+*     enqueue(e):  | |b|c|d|e|   front=1, tail=0（此时队列已满）
+*     dequeue() :  | | |c|d|e|   front=2, tail=0
+*     enqueue(f):  |f| |c|d|e|   front=2, tail=1（此时队列已满）
+*
+*   - 队列为空时：front == tail
+*   - 队列已满时：front == (tail + 1) % arr.length
+*     注意：队列已满时会有一个位置空为空，不存储元素，以保证队列为空和队列已满时的条件（front == tail）不相同。
+* 
+* - 实现：因为循环队列的机制已经不同于 Array 了，因此不能像 ArrayStack 或 ArrayQueue 一样基于 Array 实现。
 * */
 
 public class LoopQueue<E> implements Queue<E> {
