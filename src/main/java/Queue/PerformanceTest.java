@@ -3,8 +3,11 @@ package Queue;
 import java.util.Random;
 
 /*
-* - 因为 ArrayQueue 每一次 dequeue 时间复杂度是 O(n)，而 testQueue 用 for 循环 dequeue 了 n 次，所以总复杂度是 O(n^2).
-* - 而 LoopQueue 每一次 dequeue 时间复杂度是 O(1)，所以通过 testQueue 的 for 循环 dequeue 了 n 次之后，复杂度是 O(n).
+* - ArrayQueue 的 dequeue 时间复杂度是 O(n)，因此通过 testQueue 的 for 循环 dequeue 了 n 次之后的总复杂度是 O(n^2)。
+* - LoopQueue 的 dequeue 时间复杂度是 O(1)，因此通过 testQueue 的 for 循环 dequeue 了 n 次之后的总复杂度是 O(n)。
+* - 对于十万个元素，ArrayQueue 和 LoopQueue 在 enqueue & dequeue 操作的性能上大概相差80倍左右（主要是 dequeue 的区别）。
+*   但是要注意性能测试的结果受很多因素影响：不同的机器、不同的系统、不同的 java 版本（JVM 优化）等等。
+* 
 * - LinkedListQueue 和 LoopQueue 的复杂度在同一级别，所以性能差距不大。
 * - 必须明确的是，时间复杂度只衡量趋势，看n无限大时的情况。所以他也有另一个称呼，叫“渐进时间复杂度”，这个“渐进”的由来就在这里。
 *   n要渐进无穷。但是对于具体的测试用例，时间复杂度无法描述具体性能，因为时间复杂度忽略了常数项和低阶项。一个算法，时间需要

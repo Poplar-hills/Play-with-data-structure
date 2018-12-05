@@ -19,6 +19,10 @@ package Queue;
 *     注意：队列已满时会有一个位置空为空，不存储元素，以保证队列为空和队列已满时的条件（front == tail）不相同。
 * 
 * - 实现：因为循环队列的机制已经不同于 Array 了，因此不能像 ArrayStack 或 ArrayQueue 一样基于 Array 实现。
+*
+* - 复杂度分析：
+*   - enqueue  O(1)  均摊（均摊了扩容的复杂度）
+*   - dequeue  O(1)  均摊（均摊了缩容的复杂度）
 * */
 
 public class LoopQueue<E> implements Queue<E> {
@@ -35,9 +39,7 @@ public class LoopQueue<E> implements Queue<E> {
 
     public LoopQueue() { this(10); }
 
-    public int getSize() {
-        return size;
-    }
+    public int getSize() { return size; }
 
     public int getCapacity() { return data.length - 1; }  // 此处 - 1 也是因为会浪费掉一个空间，真正可利用的空间是 data.length - 1
 

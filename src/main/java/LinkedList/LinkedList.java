@@ -1,6 +1,7 @@
 package LinkedList;
 
 /*
+ * - 注：先看 LinkedListWithoutDummyHead.java，再看这里的实现。
  * - LinkedListWithoutDummyHead 的实现没有问题，只是不够优雅，因为在对任意位置添加结点的时候需要区别 index 是否是 0。
  * - 解决办法是通过在 LinkedList 最前面添加一个虚拟结点（dummyHead）统一两种情况，这是一种常见技巧。
  * - 时间复杂度分析：对于数组来说 addLast 是 O(1) 级别的复杂度，而对于链表来说：
