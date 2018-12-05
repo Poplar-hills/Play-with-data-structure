@@ -4,17 +4,26 @@ package LinkedList;
  * - 注：先看 LinkedListWithoutDummyHead.java，再看这里的实现。
  * - LinkedListWithoutDummyHead 的实现没有问题，只是不够优雅，因为在对任意位置添加结点的时候需要区别 index 是否是 0。
  * - 解决办法是通过在 LinkedList 最前面添加一个虚拟结点（dummyHead）统一两种情况，这是一种常见技巧。
- * - 时间复杂度分析：对于数组来说 addLast 是 O(1)，而对于链表来说：
- *   - addFirst 和 removeFirst 是 O(1)
- *   - addLast 和 removeLast 是 O(n)
- *   - addAtIndex 和 removeAtIndex 平均是 O(n/2)，所以也是 O(n)
+ * - 时间复杂度分析：
+ *   - 增/删操作：
+ *     - 对于数组来说：
+ *       - 对尾部的操作（addLast/removeLast）是 O(1)
+ *       - 对头部的操作（addFirst/removeFirst）是 O(n)
+ *     - 而对于链表来说正相反：
+ *       - 对尾部的操作（addFirst/removeFirst）是 O(1)
+ *       - 对头部的操作（addLast/removeLast）是 O(n)
+ *       - 任意位置的操作（addAtIndex/removeAtIndex）是 O(n/2)，所以也是 O(n)
  *   - 所以综合来看，链表的增和删操作的复杂度都是 O(n)
- *   - 对于链表的改操作（set），因为链表不支持随机访问，因此是其复杂度是 O(n)
- *   - 对于链表的查操作（contains, get），都需要遍历链表，因此复杂度都是 O(n)
- *   - 因此综合来看，链表的增、删、改、查都是 O(n) 复杂度。
- *   - 可见链表的优势不在于其时间效率，而在于其空间效率（其动态性使得没有空间浪费）。
- *   - 另外，对于链表头的增、删、改、查操作都是 O(1)，因此非常适合作为栈的底层实现；链表也可以作为 Queue 的底层实现，但需要
- *     进行改造（增加一个 tail 指针，使得 dequeue 操作的复杂度也是 O(1)），具体实现 SEE: LinkedListQueue.java
+ *   - 对于改操作（set），因为链表不支持随机访问，因此是其复杂度是 O(n)
+ *   - 对于查操作（contains, get），都需要遍历链表，因此复杂度都是 O(n)
+ *   - 因此综合来看，链表的增、删、改、查都是 O(n) 复杂度。可见链表的优势不在于其时间效率，而在于其：
+ *       1. 空间效率（其动态性使得没有空间浪费）
+ *       2. 对链表头部操作的效率（增、删、改、查操作都是 O(1)）
+ *
+ * - 应用：
+ *   1. 因为链表对于头部的效率是 O(1)，因此非常适合作为栈的底层实现；
+ *   2. 链表也可以作为 Queue 的底层实现，但需要进行改造（增加一个 tail 指针，使得 dequeue 操作的复杂度也是 O(1)），
+ *      具体实现 SEE: LinkedListQueue.java
  * */
 
 import Array.Array;

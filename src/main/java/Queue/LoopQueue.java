@@ -32,9 +32,7 @@ public class LoopQueue<E> implements Queue<E> {
 
     public LoopQueue(int capacity) {
         data = (E[]) new Object[capacity + 1];  // 不再使用之前创建的 Array 类。另外 capacity + 1 是因为循环队列中会有一个空间被浪费掉
-        front = 0;
-        tail = 0;
-        size = 0;
+        front = tail = size = 0;
     }
 
     public LoopQueue() { this(10); }
@@ -70,7 +68,6 @@ public class LoopQueue<E> implements Queue<E> {
     public E getFront() {
         if (isEmpty())
             throw new IllegalArgumentException("getFront failed. Empty queue");
-
         return data[front];
     }
 
@@ -84,9 +81,8 @@ public class LoopQueue<E> implements Queue<E> {
 
     private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity + 1];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
             newData[i] = data[(i + front) % data.length];  // i + front 可能会越界（超过 data.length），所以要求余
-        }
         data = newData;
         front = 0;
         tail = size;
@@ -99,7 +95,7 @@ public class LoopQueue<E> implements Queue<E> {
         s.append("[");
         for (int i = front; i != tail; i = (i + 1) % data.length) {
             s.append(data[i]);
-            if ((i + 1) % data.length != tail)
+            if ((i + 1) % data.length != tail)  // 如果不是最后一个节点
                 s.append(", ");
         }
         s.append("], ");

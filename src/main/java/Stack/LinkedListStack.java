@@ -3,7 +3,7 @@ package Stack;
 import LinkedList.LinkedList;
 
 public class LinkedListStack<E> implements Stack<E> {
-    private LinkedList<E> list;  // 封装 linkedList
+    private LinkedList<E> list;  // 底层基于 linkedList
 
     public LinkedListStack() { list = new LinkedList<E>(); }
 
