@@ -10,13 +10,15 @@ public class LinkedListTest {
             System.out.println(l);
         }
 
-        l.addAtIndex(888, 2);
-        l.addAtIndex2(999, 4);
+        l.addAtIndexNR(888, 2);
+        l.addAtIndex(999, 4);
         System.out.println(l);
 
         // 测试查操作
         System.out.println("\nTesting retrieving operations");
-        System.out.println(l.contains(888));
+        System.out.println("contains 888: " + l.contains(888));
+        System.out.println("contains 444: " + l.contains(444));
+        System.out.println(l.get(0));
         System.out.println(l.get(2));
 
         // 测试删操作
@@ -25,10 +27,13 @@ public class LinkedListTest {
         System.out.println(l + " Removed: " + ret1);
         int ret2 = l.removeAtIndex(0);
         System.out.println(l + " Removed: " + ret2);
-        int ret3 = l.removeFirst();
+        int ret3 = l.removeAtIndex(4);
         System.out.println(l + " Removed: " + ret3);
-        int ret4 = l.removeLast();
+        int ret4 = l.removeFirst();
         System.out.println(l + " Removed: " + ret4);
+        int ret5 = l.removeLast();
+        System.out.println(l + " Removed: " + ret5);
+
         l.removeElement(999);
         System.out.println(l);
         l.removeElementNR(2);

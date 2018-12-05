@@ -12,9 +12,8 @@ package LinkedList;
  * - 链表的基本形态：1 -> 2 -> 3 -> null
  *   - 其中中的每一个 node 包含两部分内容：1.data  2.next
  *   - 最后一个元素一定是 null
+ * - 对数组来说，向尾部添加元素非常容易，因为不需要移动任何元素；而对于链表，则是向头部添加节点很容易，因为不需要遍历节点。
  * */
-
-import Array.Array;
 
 public class LinkedListWithoutDummyHead<E> {
 
@@ -47,6 +46,7 @@ public class LinkedListWithoutDummyHead<E> {
 
     public boolean isEmpty() { return size == 0; }
 
+    // 一般不会在链表任意位置添加节点（如果需要这种操作，就不应该选择这种数据结构），但面试题中可能会出现
     public void addAtIndex(E e, int index) {  // 把中间的过程可视化出来会更清楚
         if (index < 0 || index > size)
             throw new IllegalArgumentException("addAtIndex failed. Reuqires index < 0 || index > size");

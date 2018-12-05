@@ -21,7 +21,7 @@ public class L20_Valid_Parentheses {
         return c == '{' || c == '[' || c == '(';
     }
 
-    private boolean match(char s1, char s2) {
+    private boolean match(char c1, char c2) {
         return (c1 == '(' && c2 == ')') || (c1 == '[' && c2 == ']') || (c1 == '{' && c2 == '}');
     }
 }
