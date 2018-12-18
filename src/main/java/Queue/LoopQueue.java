@@ -1,7 +1,7 @@
 package Queue;
 
 /*
-* - 循环队列的意义是为了解决普通队列在 dequeue 的时候效率低（复杂度是 O(n)）的问题。
+* - 循环队列的意义是为了解决普通队列在 dequeue 时效率低（复杂度是 O(n)）的问题。
 * - LoopQueue 特点是在 dequeue 操作之后不前移所有元素，而是引入 front、tail 两个指针，充分利用 dequeue 之后空出来的位置。
 * - 循环队列 enqueue、dequeue 的过程：
 *                  | | | | | |   front=0, tail=0

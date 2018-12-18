@@ -3,11 +3,11 @@ package Queue;
 import Array.Array;
 
 /*
-* - 相对于 Stack 的先入后出，Queue 是先入先出。
-* - 最基本队列是基于数组的，只需要做一些限制：只能从数组尾部入队，而从头部出队
+* - 相对于 Stack 的先入后出，Queue 是先入先出（FIFO）。
+* - 这里实现的队列是在数组之上加一些限制：只能从数组尾部入队，只能数组从头部出队（尾部 enqueue，头部 dequeue）
 * - 复杂度分析：
 *   - enqueue   O(1)  均摊（均摊了扩容的复杂度）
-*   - dequeue   O(n)  因为要从数组头部移除元素，也是均摊（均摊了缩容的复杂度）
+*   - dequeue   O(n)  因为要从数组头部移除元素，也是均摊的（均摊了缩容的复杂度）
 *   - getFront  O(1)
 *   - getSize   O(1)
 *   - isEmpty   O(1)

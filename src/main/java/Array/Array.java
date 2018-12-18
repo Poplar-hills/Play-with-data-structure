@@ -3,11 +3,10 @@ package Array;
 /*
  * Complexity Analysis
  * - 增操作：
- *   - addLast 的复杂度是 O(1)；
+ *   - addLast 是 O(1)；
  *   - addFirst 是 O(n)；
- *   - addAtIndex 则与 index 取值相关，若 index = 1 则是 O(n)，若 index = size - 1 则是 O(1)；
- *     但平均来说是 O(n/2)，因此还是 O(n) 级别。
- *   - 对于 addLast 来说，它一般是 O(1)，但如果发生 resize，就变成了 O(n)。因此 addLast 最坏情况下是 O(n) 级别的复杂度。
+ *   - addAtIndex 与 index 取值相关，若 index = 0 则是 O(n)，若 index = size - 1 则是 O(1)；平均来说是 O(n/2)，因此还是 O(n) 级别。
+ *   - addLast 来说，它一般是 O(1)，但如果发生 resize，就变成了 O(n)。因此 addLast 最坏情况下是 O(n) 级别的复杂度。
  *     但因为 resize 不是每次增操作都会发生，因此可以将其复杂度均摊到每次增操作中（此时均摊复杂度比最坏情况下的复杂度更有意义）。
  *     均摊之后 addLast 仍然是 O(1)。
  *   - 总的来看，增操作的时间复杂度是 O(n)。
