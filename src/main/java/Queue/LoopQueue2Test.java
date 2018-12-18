@@ -1,6 +1,6 @@
 package Queue;
 
-class LoopQueueTest2 {
+public class LoopQueue2Test {
     public static void main(String[] args) {
         Queue<Integer> q = new LoopQueue2<Integer>();
         for (int i = 0; i < 10; i++) {

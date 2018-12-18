@@ -10,7 +10,7 @@ package LinkedList;
  *     - 优势：动态性（可根据需要随时扩容缩容，无空间浪费）
  *     - 劣势：丧失了数组的随机访问能力（无法通过 index 访问元素，链表的节点在内存中不是连续存储的）
  * - 链表的基本形态：1 -> 2 -> 3 -> null
- *   - 其中中的每一个 node 包含两部分内容：1.data  2.next
+ *   - 其中每一个 node 包含两部分内容：1.data  2.next
  *   - 最后一个元素一定是 null
  * - 对数组来说，向尾部添加元素非常容易，因为不需要移动任何元素；而对于链表，则是向头部添加节点很容易，因为不需要遍历节点。
  * */
@@ -54,9 +54,9 @@ public class LinkedListWithoutDummyHead<E> {
         if (index == 0) {  // LinkedList 头结点没有前一个结点，所以特殊处理
             addFirst(e);
         } else {
-            Node prev = head;
+            Node prev = head;  // 链表的添加、删除都需要用的前一个节点
             for (int i = 0; i != index - 1; i++)
-                prev = prev.next;  // 水藤摸瓜找到待添加位置的前一个位置上的 node
+                prev = prev.next;  // 顺藤摸瓜找到待添加位置的前一个位置上的 node
             prev.next = new Node(e, prev.next);
             size++;
         }

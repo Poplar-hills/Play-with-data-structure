@@ -14,6 +14,7 @@ package Queue;
 *     dequeue() :  | | |c|d|e|   front=2, tail=0
 *     enqueue(f):  |f| |c|d|e|   front=2, tail=1（此时队列已满）
 *
+*   可见：
 *   - 队列为空时：front == tail
 *   - 队列已满时：front == (tail + 1) % arr.length
 *     注意：队列已满时会有一个位置空为空，不存储元素，以保证队列为空和队列已满时的条件（front == tail）不相同。
@@ -55,7 +56,7 @@ public class LoopQueue<E> implements Queue<E> {
             throw new IllegalArgumentException("dequeue failed. Empty queue");
 
         E dequeued = data[front];
-        data[front] = null;  // 删除的是 front 位置上的元素
+        data[front] = null;  // 出栈的是 front 位置上的元素
         front = (front + 1) % data.length;  // 出栈的时候 tail 不变，front 变
         size--;
 

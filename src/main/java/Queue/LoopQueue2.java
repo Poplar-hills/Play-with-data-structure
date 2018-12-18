@@ -1,7 +1,8 @@
 package Queue;
 
 /*
-* 这个版本的 LoopQueue 改进了判断已满和为空的方式，不需要再浪费一个空间了。
+* 这个版本的 LoopQueue 改进了判断已满和为空的方式（使用 size 判断，不再用 front、tail 判断），因此不需要再区别为空和已满条件
+* 而浪费一个空间了。
 * */
 
 public class LoopQueue2<E> implements Queue<E> {
@@ -52,11 +53,11 @@ public class LoopQueue2<E> implements Queue<E> {
 
     private boolean isFull() {  // 不再使用 front 和 tail 之间的关系来判断队列是否为满，而直接使用 size
         return size == getCapacity();
-    }
+    }  // 根据 size 判断
 
     public boolean isEmpty() {  // 直接使用 size
         return size == 0;
-    }
+    }  // 根据 size 判断
 
     private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity];  // 不再需要 newCapacity + 1
