@@ -20,7 +20,7 @@ public class BSTTest {
             bst.add(i);
             System.out.println("Current BST size: " + bst.getSize());
         }
-        System.out.println(bst);
+        System.out.println(bst + "\n");
 
         // 测试遍历 bst
         System.out.println("Testing level order traversing...");

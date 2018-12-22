@@ -11,9 +11,16 @@ package BST;
 *
 * - 3 Types of Binary Tree
 *   1. 满二叉树（full binary tree）：树中除了叶子节点，每个节点都有两个子节点
-*   2. 完全二叉树（complete binary tree）：在满足满二叉树的性质后，最后一层的叶子节点均需在最左边
-*   3. 完美二叉树（perfect  binary tree）：满足完全二叉树性质，树的叶子节点均在最后一层（也就是形成了一个完美的三角形）
+*   2. 完全二叉树（complete binary tree）：满足满二叉树的性质，且最后一层的叶子节点均需在最左边
+*   3. 完美二叉树（perfect binary tree）：满足完全二叉树性质，且树的叶子节点均在最后一层（也就是形成了一个完美的三角形）
 *   - 满二叉树、完全二叉树、完美二叉树的定义是越来越严格的（可视化解释 SEE：https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree）
+*
+* - BST（二分搜索树）满足3个条件：
+*   1. 是一种二叉树
+*   2. 其上的每个节点的值：
+*     a. 都大于其左子树上的任意节点的值
+*     b. 都小于其右子树上的任意节点的值
+*   3. 每个节点上存储的值必须具有可比较性
 *
 * - 对 BST 的遍历分为前序、中序、后序3种遍历方法，其中：
 *   - 前序遍历顺序是：当前节点->左子树->右子树。因此，树上节点的访问顺序是：28->16->13->22->30->29->42（上层->底层）。
@@ -51,6 +58,9 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             left = null;
             right = null;
         }
+
+        @Override
+        public String toString() { return e.toString(); }
     }
 
     public BST() {
@@ -289,27 +299,19 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        return toString(root,0, s).toString();
-    }
-
-    private StringBuilder toString(Node node, int depth, StringBuilder s) {
-        if (node == null) {
-            s.append(getDepthSign(depth) + "null\n");
-            return s;
-        } else {
-            s.append(getDepthSign(depth) + node.e + "\n");
-            toString(node.left, depth + 1, s);
-            toString(node.right, depth + 1, s);
-        }
-        return s;
-    }
-
-    private String getDepthSign(int depth) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            s.append("--");
-        }
-        s.append(" ");
+        toString(root, s, 0);
         return s.toString();
+    }
+
+    private void toString(Node node, StringBuilder s, int depth) {
+        if (node == null) return;
+
+        s.append("\n");
+        for (int i = 0; i < depth; i++)
+            s.append("--");
+        s.append(node.toString());
+
+        toString(node.left, s, depth + 1);
+        toString(node.right, s, depth + 1);
     }
 }
