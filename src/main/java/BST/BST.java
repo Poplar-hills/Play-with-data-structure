@@ -3,17 +3,17 @@ package BST;
 /*
 * Binary Search Tree 二叉查找树
 *
+* - 3 Types of Binary Tree
+*   1. 满二叉树（full binary tree）：树中除了叶子节点，每个节点都有两个子节点。（a tree in which every node other than the leaves has two children）
+*   2. 完全二叉树（complete binary tree）：满足满二叉树的性质，且最后一层的叶子节点均需在最左边。（a tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible.）
+*   3. 完美二叉树（perfect binary tree）：满足完全二叉树性质，且树的叶子节点均在最后一层（也就是形成了一个完美的三角形）。
+*   - 满二叉树、完全二叉树、完美二叉树的定义是越来越严格的（可视化解释 SEE：https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree）
+*
 *         28
 *       /    \
 *     16     30
 *    /  \   /  \
 *  13   22 29  42
-*
-* - 3 Types of Binary Tree
-*   1. 满二叉树（full binary tree）：树中除了叶子节点，每个节点都有两个子节点
-*   2. 完全二叉树（complete binary tree）：满足满二叉树的性质，且最后一层的叶子节点均需在最左边
-*   3. 完美二叉树（perfect binary tree）：满足完全二叉树性质，且树的叶子节点均在最后一层（也就是形成了一个完美的三角形）
-*   - 满二叉树、完全二叉树、完美二叉树的定义是越来越严格的（可视化解释 SEE：https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree）
 *
 * - BST（二分搜索树）满足3个条件：
 *   1. 是一种二叉树
@@ -22,16 +22,23 @@ package BST;
 *     b. 都小于其右子树上的任意节点的值
 *   3. 每个节点上存储的值必须具有可比较性
 *
-* - 对 BST 的遍历分为前序、中序、后序3种遍历方法，其中：
-*   - 前序遍历顺序是：当前节点->左子树->右子树。因此，树上节点的访问顺序是：28->16->13->22->30->29->42（上层->底层）。
-*   - 中序遍历顺序是：左子树->当前节点->右子树。因此，树上节点的访问顺序是：13->16->22->28->29->30->42。
-*   - 而因为一个节点的左子树都比该节点小，而右子树都比该节点大，因此中序遍历的结果是从小到大顺序排列的。
-*   - 后序遍历顺序是：左子树->右子树->当前节点。因此，树上节点的访问顺序是：13->22->16->29->42->30->28（底层->上层）。
-*   - 后序遍的一个应用是为 BST 释放内存，即对于一个节点需要先释放所有子节点的内存，再释放该节点内存，因此需要后续遍历。
-*     因为 Java 是自动垃圾回收，所以不需要操心这个问题，但 C++ 就需要了。
-* - 实际上在一次 BST 的遍历中，每个节点都有3次访问机会（前、中、后序）就看需要什么样的访问顺序了。
+* - 遍历
+*   - 对 BST 的深度优先遍历又分为前序、中序、后序3种遍历方法，其中：
+*     - 前序：当前节点->左子树->右子树。树上节点的访问顺序是：28->16->13->22->30->29->42（上层->底层）。
+*     - 中序：左子树->当前节点->右子树。树上节点的访问顺序是：13->16->22->28->29->30->42（因为每个节点的左子树都比该节点小，而右子树
+*       都比该节点大，因此中序遍历的结果是从小到大顺序排列的）。
+*     - 后序：左子树->右子树->当前节点。树上节点的访问顺序是：13->22->16->29->42->30->28（底层->上层）（后序遍的一个应用是为 BST 释
+*       放内存，即对于一个节点需要先释放所有子节点的内存，再释放该节点内存，因此需要后续遍历。因为 Java 是自动垃圾回收，所以不需要操心
+*       这个问题，但 C++ 就需要了）。
+*     - 实际上在一次 BST 的遍历中，每个节点都有3次访问机会（前、中、后序）就看需要什么样的访问顺序了。
+*   - 对 BST 的广度优先遍历（也叫层序遍历）一般要使用非递归，并要接住队列实现。
 *
-* - 除了这里实现的 BST 方法外，常见的还有 floor、ceil、rank、select 等，实现 SEE：https://coding.imooc.com/learn/questiondetail/63002.html
+* - BST 还具有另一个重要性质 —— 顺序性，即 BST 中存储元素使隐含顺序的，因此中序遍历的结果是从小到大排列的。
+*   因为 BST 具有顺序性，因此很容易实现其他一些常用方法：
+*   - getSuccessor / getPredecessor：给定一个值，找到其前驱/后继
+*   - floor / ceil：给定一个值，找到比它小的最大值/比它大的最小值
+*   - rank / select：给定一个值，找到其在 BST 上的排名 / 给定一个排名，找到它在 BST 上的值
+*   - 参考实现 SEE：https://coding.imooc.com/learn/questiondetail/63002.html（ceil 和 floor 的实现有问题）
 *
 * - 对于树的遍历算法，无论是前中后序遍历，时间复杂度都是 O(n) 的，n 是树中节点个数。因为每一个节点在递归的过程中，只访问了一次。
 * - 空间复杂度，通常说是 O(h) 的，h 是树的最大高度。这是因为在递归的过程中，每向下递归一层，就需要占用一定的系统栈空间。最多占
@@ -132,7 +139,6 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     private Node remove(Node node, E e) {
         if (node == null)  // 从根节点到叶子节点的整个路径上都没找到 e
             return null;
-
         if (e.compareTo(node.e) < 0) {
             node.left = remove(node.left, e);
             return node;
@@ -146,7 +152,6 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 size--;
                 return rightNode;
             }
-
             if (node.right == null) {  // 如果待删除节点只有左子树，或左右都没有
                 Node leftNode = node.left;
                 node.left = null;
@@ -227,7 +232,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     public void preOrderTraverseNR() {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
-        Stack<Node> stack = new Stack<Node>();  // 用栈数据结构实现遍历
+        Stack<Node> stack = new Stack<Node>();  // 用栈实现遍历
         if (root == null) return;
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -235,7 +240,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             System.out.println(curr);
 
             if (curr.right != null)
-                stack.push(curr.right);  // 因为栈是后入先出，所以要先压入右子树，再压入左子树，让左子树先出栈
+                stack.push(curr.right);  // 因为栈是后入先出，所以要先压入右子节点，再压入左子节点，让左子节点先出栈
             if (curr.left != null)
                 stack.push(curr.left);
         }
@@ -262,7 +267,21 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void levelOrderTraverse() {
+    public void levelOrderTraverseNR() {  // 层序遍历（广度优先遍历）
+        Queue<Node> queue = new LinkedList<Node>();  // 使用链表模拟的队列作为遍历时使用的数据结构（或者直接使用队列也行）
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node curr = queue.remove();
+            System.out.println(curr.e);
+
+            if (curr.left != null)
+                queue.add(curr.left);
+            if (curr.right != null)
+                queue.add(curr.right);
+        }
+    }
+
+    public void levelOrderTraverse() {  // 层序遍历的递归实现
         if (root == null) return;
         System.out.println(root.e);
         levelOrderTraverse(root);
@@ -277,20 +296,6 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             levelOrderTraverse(curr.left);
         if (curr.right != null)
             levelOrderTraverse(curr.right);
-    }
-
-    public void levelOrderTraverseNR() {  // 层序遍历（广度优先遍历）
-        Queue<Node> queue = new LinkedList<Node>();  // 使用链表实现的队列作为遍历时使用的数据结构
-        queue.add(root);
-        while (!queue.isEmpty()) {
-            Node curr = queue.remove();
-            System.out.println(curr.e);
-
-            if (curr.left != null)
-                queue.add(curr.left);
-            if (curr.right != null)
-                queue.add(curr.right);
-        }
     }
 
     /*
