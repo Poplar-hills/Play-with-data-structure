@@ -20,17 +20,27 @@ public class BSTTest {
             bst.add(i);
             System.out.println("Current BST size: " + bst.getSize());
         }
-        System.out.println(bst + "\n");
+        System.out.println(bst);
 
         // 测试遍历 bst
-        System.out.println("Testing level order traversing...");
+        System.out.println("\nTesting level order traversing...");
         bst.levelOrderTraverse();
 
         // 测试 getMin, getMax
-        System.out.println(String.format("\nMin: %d. Max: %d", bst.getMin(), bst.getMax()));
+        System.out.println("\nTesting getMin, getMax...");
+        System.out.println(String.format("Min: %d. Max: %d", bst.getMin(), bst.getMax()));
+
+        // 测试 floor
+        System.out.println("\nTesting floor...");
+        System.out.println(bst.floor(4));
+        System.out.println(bst.floor(1));
+        System.out.println(bst.floor(7));
+        System.out.println(bst.floor(0));
+        System.out.println(bst.floor(-1));
+        System.out.println(bst.floor(10));
 
         // 测试 removeMax
-        System.out.println("Testing removeMax...");
+        System.out.println("\nTesting removeMax...");
         ArrayList<Integer> nums = new ArrayList<Integer>();
         while (!bst.isEmpty())
             nums.add(bst.removeMax());  // 不断 removeMax 并放到数组中

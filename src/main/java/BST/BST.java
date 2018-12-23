@@ -217,6 +217,27 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return getMax(node.right);
     }
 
+    public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下）
+        Node floor = floor(root, e, false);
+        return floor != null ? floor.e : null;
+    }
+
+    private Node floor(Node node, E e, boolean isLargeThanParent) {
+        if (node == null)
+            return null;
+        if (e.compareTo(node.e) == 0)
+            return node;
+        if (e.compareTo(node.e) > 0) {
+            Node floor = floor(node.right, e, true);
+            return floor == null ? node : floor;  // 若 floor == null，说明当前节点值就是 floor；否则说明找到了节点值等于 e 的节点
+        }
+        return isLargeThanParent
+                ? null  // 若 e 小于当前节点值，但又大于父节点值（说明当前处于某个右倾分支上，如 -6-8，e=7；此时 e < 当前节点值8，又 > 父节点值6，因此父节点值6就是 floor），因此不再继续递归，直接返回 null 到上一层取父节点值作为结果
+                : floor(node.left, e, false);  // 若 e 小于当前节点值，同时又小于父节点值（说明当前处于某个左倾分支上），则继续向左递归，此时有两种结果：
+        // 1. 返回 null：此时递归到底，且 e 比一路上的节点值都小，因此没有整棵 BST 没有 floor
+        // 2. 返回值不为 null：即没有递归到底，此时的唯一可能就是找到了节点值等于 e 的节点（e.compareTo(node.e) == 0）
+    }
+
     /*
      * Traverse
      * */
