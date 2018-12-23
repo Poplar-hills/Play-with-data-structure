@@ -37,7 +37,9 @@ package BST;
 *   因为 BST 具有顺序性，因此很容易实现其他一些常用方法：
 *   - getSuccessor / getPredecessor：给定一个值，找到其前驱/后继
 *   - floor / ceil：给定一个值，找到比它小的最大值/比它大的最小值
-*   - rank / select：给定一个值，找到其在 BST 上的排名 / 给定一个排名，找到它在 BST 上的值
+*   - rank / select：给定一个值，找到其在 BST 上的排名 / 给定一个排名，找到它在 BST 上的值；实现 rank, select 的最好方式是在每个节
+*     点中维护一个 size 字段，记录以该节点为根的 BST 中共有多少个元素。
+*   - 除了在每个节点中维护 size 字段以外，还可以维护 depth、count 等字段来实现其他常用功能（比如 count 字段使得 BST 能支持重复元素）。
 *   - 参考实现 SEE：https://coding.imooc.com/learn/questiondetail/63002.html（ceil 和 floor 的实现有问题）
 *
 * - 对于树的遍历算法，无论是前中后序遍历，时间复杂度都是 O(n) 的，n 是树中节点个数。因为每一个节点在递归的过程中，只访问了一次。
@@ -217,7 +219,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return getMax(node.right);
     }
 
-    public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下）
+    public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下 ceil，思路类似）
         Node floor = floor(root, e, false);
         return floor != null ? floor.e : null;
     }
