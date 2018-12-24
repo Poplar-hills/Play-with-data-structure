@@ -32,10 +32,8 @@ public class Array<E> {
 
     public Array(E[] arr) {  // 通过普通数组生成动态数组的构造函数
         data = (E[]) new Object[arr.length];
-
         for (int i = 0; i < arr.length; i++)
             data[i] = arr[i];
-
         size = arr.length;
     }
 
