@@ -4,16 +4,22 @@ package BST;
 * Binary Search Tree 二叉查找树
 *
 * - 3 Types of Binary Tree
-*   1. 满二叉树（full binary tree）：树中除了叶子节点，每个节点都有两个子节点。（a tree in which every node other than the leaves has two children）
-*   2. 完全二叉树（complete binary tree）：满足满二叉树的性质，且最后一层的叶子节点均需在最左边。（a tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible.）
-*   3. 完美二叉树（perfect binary tree）：满足完全二叉树性质，且树的叶子节点均在最后一层（也就是形成了一个完美的三角形）。
-*   - 满二叉树、完全二叉树、完美二叉树的定义是越来越严格的（可视化解释 SEE：https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree）
+*   1. 满二叉树（full/strict binary tree）：树中除了叶子节点，每个节点都有两个子节点。
+*   2. 完全二叉树（complete binary tree）：叶子节点只出现在最后、倒数第二层，且最后一层的叶子节点均在最左边。
+*   3. 完美二叉树（perfect binary tree）：满足完全二叉树、满二叉树性质，且叶子节点均在最后一层（即形成了一个完美的三角形）。
+*   4. 平衡二叉树（balanced binary tree）：是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
+*   - 完全二叉树不一定是满二叉树；
+*   - 完美二叉树一定是完全二叉树，也是满二叉树；
+*   - 完全二叉树、完美二叉树一定是平衡二叉树。
 *
-*         28
-*       /    \
-*     16     30
-*    /  \   /  \
-*  13   22 29  42
+*         28                      28                      28
+*       /    \                  /    \                  /    \
+*     16     30               16     30               16      30
+*    /  \   /  \             /  \                   /   \    /  \
+*  13   22 29  42          13   22                13    22  29  34
+*                              /  \              /  \  /
+*                            18   25            8  15 20
+*     完美二叉树                满二叉树                完全二叉树
 *
 * - BST（二分搜索树）满足3个条件：
 *   1. 是一种二叉树

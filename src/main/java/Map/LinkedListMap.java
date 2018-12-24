@@ -1,15 +1,13 @@
 package Map;
 
-import javafx.util.Pair;
-
 public class LinkedListMap<K, V> implements Map<K, V> {
     private Node dummyHead;
     private int size;
 
     private class Node {
-        public K key;
-        public V value;
-        public Node next;
+        private K key;
+        private V value;
+        private Node next;
 
         public Node(K key, V value, Node next) {
             this.key = key;
@@ -34,6 +32,18 @@ public class LinkedListMap<K, V> implements Map<K, V> {
      * 辅助方法
      */
     private Node getNode(K key) {
+        return getNode(dummyHead.next, key);
+    }
+
+    private Node getNode(Node node, K key) {
+        if (node == null)
+            return null;
+        if (key.equals(node.key))
+            return node;
+        return getNode(node.next, key);
+    }
+
+    private Node getNodeNR(K key) {
         for (Node curr = dummyHead.next; curr != null; curr = curr.next) {
             if (curr.key.equals(key))
                 return curr;
@@ -57,22 +67,35 @@ public class LinkedListMap<K, V> implements Map<K, V> {
      * 删操作
      */
     public V remove(K key) {
-        Pair<Node, V> res = remove(dummyHead.next, key);
-        return res.getValue();
+        Node removed = remove(dummyHead, key);
+        return removed != null ? removed.value : null;
     }
 
-    private Pair<Node, V> remove(Node node, K key) {
-        if (node == null)
+    private Node remove(Node prev, K key) {
+        if (prev.next == null)
             return null;
-        if (node.key.equals(key)) {
-            Node next = node.next;
-            node.next = null;
+        if (prev.next.key.equals(key)) {
+            Node curr = prev.next;
+            prev.next = curr.next;
+            curr.next = null;
             size--;
-            return new Pair<Node, V>(next, node.value);
+            return curr;
         }
-        Pair<Node, V> res = remove(node.next, key);
-        node.next = res.getKey();
-        return new Pair<Node, V>(node, res.getValue());
+        return remove(prev.next, key);
+    }
+
+    public V removeNR(K key) {
+        for (Node prev = dummyHead; prev.next != null; prev = prev.next) {
+            Node curr = prev.next;
+            if (curr.key.equals(key)) {
+                Node removed = curr;
+                prev.next = curr.next;
+                curr.next = null;
+                size--;
+                return removed.value;
+            }
+        }
+        return null;
     }
 
     /*

@@ -14,7 +14,10 @@ public class LinkedListMapTest {
 
         int a = map.remove("a");
         System.out.println(map + " Removed: " + a);
-        System.out.println(map.get("b"));
+        int b = map.remove("b");
+        System.out.println(map + " Removed: " + b);
+
+        System.out.println(map.get("c"));
         System.out.println(map.get("a"));
     }
 }

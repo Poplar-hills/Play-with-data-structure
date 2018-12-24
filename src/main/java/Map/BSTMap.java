@@ -3,7 +3,12 @@ package Map;
 import javafx.util.Pair;
 
 /*
-* - 这里使用 BST 实现 Map
+* - 这里使用 BST 实现 Map。
+* - 与 Set 一样，Map 也分为：
+*   1. 有序映射（如 BSTMap）：键具有顺序性
+*   2. 无需映射两种（如 HashMap）：键没有顺序性
+*   3. 多重映射（如 Guava 中的 MultiMap）：键是可以重复的，重复的键对应的值会被集合起来，其结构类似 Map<K, List<V>> 或 Map<K, Set<V>>
+*
 * - 除了 LinkedList 和 BST 以外，Set 也可以作为 Map 的底层实现：只需要将 Set 中的元素定义为键值对，并且只比较键是否重复，不用管值
 * - 而反过来，Map 也可以作为 Set 的底层实现：只需要将键值对中的值置空即可（只有键没有值的 Map 就是 Set）
 * */
