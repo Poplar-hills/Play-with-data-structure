@@ -41,9 +41,9 @@ public class Solution1 {
         // 使用优先队列维护频率最高的 k 个元素
         PriorityQueue<Frequency> pq = new PriorityQueue<>(new FreqComparator());  // Java 的 PriorityQueue 是一个最小堆
         for (int key : map.keySet()) {
-            if (pq.size() < k)
+            if (pq.size() < k)  // 并不是将所有元素都丢入优先队列中进行 siftDown，而是先丢入 k 个
                 pq.add(new Frequency(key, map.get(key)));
-            else if (map.get(key) > pq.peek().frequency) {
+            else if (map.get(key) > pq.peek().frequency) {  // 如果后面的元素频率比队列中频率最大的还大，则替换
                 pq.remove();
                 pq.add(new Frequency(key, map.get(key)));
             }
