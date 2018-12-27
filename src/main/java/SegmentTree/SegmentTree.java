@@ -49,7 +49,7 @@ public class SegmentTree<E> {
     private E[] tree;  // 以数组表示的线段树（是补全最底层之后的完美二叉树）
     private Merger<E> merger;
 
-    public SegmentTree(E[] arr, Merger<E> merger) {  // 由数组生成线段树
+    public SegmentTree(E[] arr, Merger<E> merger) {  // 由数组生成线段树（但必须是包装类数组）
         this.merger = merger;
 
         data = (E[]) new Object[arr.length];  // 维护一个传入的数组副本
@@ -78,7 +78,7 @@ public class SegmentTree<E> {
         buildSegmentTree(leftTreeIndex, l, mid);
         buildSegmentTree(rightTreeIndex, mid + 1, r);
 
-        tree[treeIndex] = merger.merge(tree[leftTreeIndex], tree[rightTreeIndex]);  //
+        tree[treeIndex] = merger.merge(tree[leftTreeIndex], tree[rightTreeIndex]);
     }
 
     /*
@@ -125,26 +125,25 @@ public class SegmentTree<E> {
     public E query(int queryL, int queryR) {
         if (queryL < 0 || queryL >= data.length || queryR < 0 || queryR >= data.length || queryL > queryR)
             throw new IllegalArgumentException("query failed. Invalid query boundaries");
-
         return query(0, 0, data.length - 1, queryL, queryR);
     }
 
-    private E query(int treeIndex, int l, int r, int queryL, int queryR) {
-        if (l == queryL && r == queryR)
+    private E query(int treeIndex, int nodeL, int nodeR, int queryL, int queryR) {
+        if (nodeL == queryL && nodeR == queryR)
             return tree[treeIndex];
 
-        int mid = (r - l) / 2 + l;
+        int mid = (nodeR - nodeL) / 2 + nodeL;
         int leftTreeIndex = getLeftChildIndex(treeIndex);
         int rightTreeIndex = getRightChildIndex(treeIndex);
 
         if (queryR <= mid)  // 查询范围只在左子树的范围内
-            return query(leftTreeIndex, l, mid, queryL, queryR);
+            return query(leftTreeIndex, nodeL, mid, queryL, queryR);
         if (queryL >= mid + 1)  // 查询范围只在右子树的范围内
-            return query(rightTreeIndex, mid + 1, r, queryL, queryR);
+            return query(rightTreeIndex, mid + 1, nodeR, queryL, queryR);
 
         // 查询范围同时存在于左、右子树的范围内
-        E leftResult = query(leftTreeIndex, l, mid, queryL, mid);
-        E rightResult = query(rightTreeIndex, mid + 1, r, mid + 1, queryR);
+        E leftResult = query(leftTreeIndex, nodeL, mid, queryL, mid);
+        E rightResult = query(rightTreeIndex, mid + 1, nodeR, mid + 1, queryR);
         return merger.merge(leftResult, rightResult);
     }
 
