@@ -5,8 +5,10 @@ package SegmentTree;
 *   - 其中，区间是固定的，而区间内每个片段上的数据是动态的。
 *   - 例子：
 *     1. 在一段长度确定的墙上，每次对不同区间内的墙面刷上不同颜色的油漆，问 m 次操作后，在 [i, j] 区间内共可以看到多少种颜色？
-*     2. 在2017年注册的所有用户中，找出至今消费最多的用户？停留时间最长的用户？（"2017年注册的用户"是固定区域，"至今消费额"是变量）
-*     3. 在一段太空区域中的天体总量？（"一段太空区域"是固定区域，"区域中的天体总量"是变量）
+*     2. 在2017年注册的所有用户中，找出至今消费最多的用户？停留时间最长的用户？
+*       （"2017年注册的用户"是固定区域，"至今消费额"是变量，线段树中的每一个节点表示一个时间段中的消费最高/最低/学习时间最长的用户）
+*     3. 在一段太空区域中的天体总量？
+*       （"一段太空区域"是固定区域，"区域中的天体总量"是变量，但这里处理的是二维空间，需要使用线段树的拓展 —— 二维线段树）
 *   - 线段树能让我们即使在大数据量的情况下，也能快速找到我们关心的区间中的节点值，并对它们进行预定义的操作和统计。
 *
 * - 线段树有两个基本操作：更新（set）、查询（query）。可以使用两种数据结构解决：
@@ -42,6 +44,12 @@ package SegmentTree;
 *   - 结论：如果某个区间上有 n 个元素，要为该区间建立线段树，并用数组表示，最坏情况下需要开辟 4n 的空间
 *     - 会有空间浪费，因为最后一层要补空节点（最坏情况下会浪费近一半空间）。
 *     - 但是线段树的意义就是在于用空间换时间，因此不需要太过在意。
+*
+* - 值得听一下的线段树的扩展话题：https://coding.imooc.com/lesson/207.html#mid=13849
+*    - 线段树的区间更新操作：3'35''
+*    - 二维线段树：8'28''
+*    - 动态线段树：10'55''
+*    - 树状数组：14'00''
 * */
 
 public class SegmentTree<E> {
@@ -58,10 +66,10 @@ public class SegmentTree<E> {
 
         tree = (E[]) new Object[arr.length * 4];  // 给 n 个元素开辟 4n 的空间
 
-        buildSegmentTree(0, 0, data.length - 1);
+        buildSegmentTree(0, 0, data.length - 1);  // 注意：线段树的初始化时 O(4n) 的复杂度（因为用到的空间是4n，要对每个空间赋值）
     }
 
-    private void buildSegmentTree(int treeIndex, int l, int r) {  // 从 treeIndex 处开始在 tree 中创建表示区间 [l..r] 的线段树
+    private void buildSegmentTree(int treeIndex, int l, int r) {  // 从 treeIndex 处开始在 tree 中创建表示区间 [l..r] 的线段树（用笔画一遍这个过程会很有帮助）
         if (l == r) {  // 终止条件：当递归到叶子节点，只剩下一个元素时 l == r
             tree[treeIndex] = data[l];
             return;
@@ -96,7 +104,6 @@ public class SegmentTree<E> {
     public void set(int index, E e) {
         if (index < 0 || index >= data.length)
             throw new IllegalArgumentException("set failed. Invalid index");
-
         data[index] = e;
         set(0, 0, data.length - 1, index, e);
     }
@@ -116,6 +123,7 @@ public class SegmentTree<E> {
         else               // 在右边
             set(rightChildIndex, mid + 1, r, index, e);
 
+        // 光更新最底层的节点还不够，其路径上的所有节点也都需要更新
         tree[treeIndex] = merger.merge(tree[leftChildIndex], tree[rightChildIndex]);
     }
 

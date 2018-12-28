@@ -18,7 +18,7 @@ public class Solution2 {
             sums[i] = sums[i - 1] + nums[i - 1];
     }
 
-    public int sumRange(int i, int j) {
+    public int sumRange(int i, int j) {  // O(1) 的复杂度
         if (i < 0 || j < 0 || i > sums.length || j > sums.length || i > j)
             throw new IllegalArgumentException("sumRange failed.");
         return sums[j + 1] - sums[i];  // 注意是 j + 1
