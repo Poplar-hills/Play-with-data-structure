@@ -1,5 +1,13 @@
 package SegmentTree.L303_Range_Sum_Query_Immutable;
 
+/*
+* - 这里使用数组，每个位置存储前 i 个元素的和
+*     输入数组 nums =    [-2, 0, 3, -5, 2, -1]
+*     求和数组 sums = [0, -2, -2, 1, -4, -2, -3]
+* - 该方法要比线段树效率还高（因为随机访问，所以效率更高）
+* - 本题求的是区间和，如果要求区间最大值，则这个方案就实现不了了，需要使用线段树
+* */
+
 public class Solution2 {
     private int[] sums;  // sums[i] 存储前 i 个元素（0...i-1）之和
 
