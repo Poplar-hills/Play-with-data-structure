@@ -1,30 +1,30 @@
 package UnionFind;
 
 /*
- * - 基于路径压缩的优化
- * - 原因：见 PerformanceTest
+ * - 基于路径压缩的另一种优化思路 —— 使用递归一次性将要查找的节点链接到根节点上（而不是像 UnionFind5 那样每次上移一层）。
+ * - 原因 SEE：https://coding.imooc.com/lesson/207.html#mid=14171（0'0''）
  * */
 
 public class UnionFind6 implements UF {
-    private int[] setIds;
+    private int[] parents;
     private int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度
 
     public UnionFind6(int size) {
-        setIds = new int[size];
+        parents = new int[size];
         ranks = new int[size];
         for (int i = 0; i < size; i++) {
-            setIds[i] = i;
+            parents[i] = i;
             ranks[i] = 1;
         }
     }
 
     private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= setIds.length)
+        if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        if (setIds[p] != p)    // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
-            setIds[p] = find(setIds[p]);
-        return setIds[p];
+        if (parents[p] != p)    // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
+            parents[p] = find(parents[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
+        return parents[p];
     }
 
     @Override
@@ -41,16 +41,16 @@ public class UnionFind6 implements UF {
             return;
 
         if (ranks[pRoot] < ranks[qRoot])
-            setIds[pRoot] = qRoot;
+            parents[pRoot] = qRoot;
         else if (ranks[pRoot] > ranks[qRoot])
-            setIds[qRoot] = pRoot;
+            parents[qRoot] = pRoot;
         else {
-            setIds[qRoot] = pRoot;
+            parents[qRoot] = pRoot;
             ranks[pRoot] += 1;
         }
     }
 
     @Override
-    public int getSize() { return setIds.length; }
+    public int getSize() { return parents.length; }
 }
 

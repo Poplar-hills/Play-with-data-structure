@@ -1,29 +1,29 @@
 package UnionFind;
 
 /*
-* - 基于元素个数（element count）的优化
-* - 原因：见 PerformanceTest
+* - 该实现对 UnionFind2 做了基于树大小的优化。
+* - 原因 SEE: https://coding.imooc.com/lesson/207.html#mid=14168（7'43''）
 * */
 
 public class UnionFind3 implements UF {
-    private int[] setIds;
-    private int[] elCounts;  // elCounts[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树的高度）
+    private int[] parents;
+    private int[] sizes;  // sizes[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树上的元素个数）
 
     public UnionFind3(int size) {
-        setIds = new int[size];
-        elCounts = new int[size];
+        parents = new int[size];
+        sizes = new int[size];
         for (int i = 0; i < size; i++) {
-            setIds[i] = i;
-            elCounts[i] = 1;
+            parents[i] = i;
+            sizes[i] = 1;
         }
     }
 
     private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= setIds.length)
+        if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        while(setIds[p] != p)
-            p = setIds[p];
+        while(parents[p] != p)
+            p = parents[p];
         return p;
     }
 
@@ -40,16 +40,16 @@ public class UnionFind3 implements UF {
         if (pRoot == qRoot)
             return;
 
-        if (elCounts[pRoot] < elCounts[qRoot]) {
-            setIds[pRoot] = qRoot;  // 将 elCount 小的树合并到 elCount 大的树上
-            elCounts[qRoot] += elCounts[pRoot];
+        if (sizes[pRoot] < sizes[qRoot]) {  // 判断两个树的 size，将 size 小的树合并到 size 大的树上（加上这个优化后性能有了巨大的提升）。
+            parents[pRoot] = qRoot;
+            sizes[qRoot] += sizes[pRoot];
         } else {
-            setIds[qRoot] = pRoot;
-            elCounts[pRoot] += elCounts[qRoot];
+            parents[qRoot] = pRoot;
+            sizes[pRoot] += sizes[qRoot];
         }
     }
 
     @Override
-    public int getSize() { return setIds.length; }
+    public int getSize() { return parents.length; }
 }
 
