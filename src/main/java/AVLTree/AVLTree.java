@@ -1,10 +1,10 @@
 package AVLTree;
 
 /*
+* - AVL tree 也是最早的自平衡二分搜索树。"AVL"是其发明人（俄国人）的名字首字母缩写。
 * - 之前我们实现的 BST 的最大的问题是，当将一组数据顺序 add 到 BST 上时，会得到一棵形如链表的树，从而失去了 BST 的性能优势。
 *   解决办法就是在 BST 上添加一些机制使得它在任何情况下都是一棵平衡二叉树，从而使得高度和节点数量之间的关系仍然是 O(logn)。
-* - AVL tree 就是一种最经典的平衡二分搜索树（之前讲过的堆、线段树也是平衡二叉树，但不是平衡二分搜索树）。同时，AVL tree 也是
-*   最早被发明的自平衡树结构。"AVL"是其发明人的名字首字母缩写。
+* - AVL tree 就是一种最经典的平衡二分搜索树（之前讲过的堆、线段树也是平衡二叉树，但不是平衡二分搜索树）。
 *
 * - 之前我们对平衡二叉树的定义是：对于任意叶子节点，其最大深度与最小深度的差不超过1，并且左右两个子树都是一棵平衡二叉树。
 *   而 AVL tree 对"平衡二叉树"的定义稍微宽松一些：对于任意一个节点（不一定是叶子节点），左子树和右子树的高度差不超过1。例如：
@@ -223,7 +223,7 @@ public class AVLTree<E extends Comparable<E>> {
             }
             else {
                 Node successor = getMin(node.right);
-                successor.right = remove(node.right, successor.e);
+                successor.right = remove(node.right, successor.e);  // BST 中此处用的是 removeMin(node.right)，但 removeMin 方法中没有维护平衡，所以此处递归调用 remove 删除节点并维护平衡。
                 successor.left = node.left;
                 node.left = node.right = null;
                 retNode = successor;

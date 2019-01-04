@@ -101,7 +101,7 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
         // 2. 计算平衡因子
         int balanceFactor = getBalanceFactor(node);
 
-        // 3. 恢复平衡
+        // 3. 检查、恢复平衡
         if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0)  // 当新添加结点在不平衡节点左子树的左子树上，即 LL 情况
             return rightRotate(node);  // 返回保持平衡的 BST
 
@@ -181,7 +181,7 @@ public class AVLTreeMap<K extends Comparable<K>, V> implements Map<K, V> {
             }
             else {
                 Node successor = getMin(node.right);
-                successor.right = remove(node.right, successor.key);  // BST 中此处用的是 removeMin(node.right)，但 removeMin 方法中没有维护平衡，所以此处这样
+                successor.right = remove(node.right, successor.key);  // BST 中此处用的是 removeMin(node.right)，但 removeMin 方法中没有维护平衡，所以此处递归调用 remove 删除节点并维护平衡。
                 successor.left = node.left;
                 node.left = node.right = null;
                 retNode = successor;

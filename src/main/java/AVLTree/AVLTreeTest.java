@@ -3,6 +3,8 @@ package AVLTree;
 import java.util.ArrayList;
 import java.util.List;
 
+// AVL tree 的效率已经很高了，但从统计上来说，红黑树会比 AVL tree 更高。
+
 public class AVLTreeTest {
     public static void main(String[] args) {
         AVLTree<Integer> avlTree = new AVLTree<Integer>();
