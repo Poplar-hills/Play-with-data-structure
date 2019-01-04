@@ -18,12 +18,12 @@ package UnionFind;
 * */
 
 public class UnionFind2 implements UF {
-    private int[] parents;
+    private int[] setIds;
 
     public UnionFind2(int size) {
-        parents = new int[size];
+        setIds = new int[size];
         for (int i = 0; i < size; i++)
-            parents[i] = i;
+            setIds[i] = i;
     }
 
     @Override
@@ -39,18 +39,18 @@ public class UnionFind2 implements UF {
         if (pRoot == qRoot)
             return;
 
-        parents[pRoot] = qRoot;  // 将 p 所在的根节点的集合编号置为 q 所在的根节点的集合编号
+        setIds[pRoot] = qRoot;  // 将 p 所在的根节点的集合编号置为 q 所在的根节点的集合编号
     }
 
     private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= parents.length)
+        if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        while (parents[p] != p)  // 循环找到 p 的根节点，只有根节点的集合编号才等于其 parent 的集合编号，因此找到了根节点就找到了 p 所对应的集合编号
-            p = parents[p];
+        while (setIds[p] != p)  // 循环找到 p 的根节点，只有根节点的值才等于其 setId，因此找到了根节点就找到了 p 所对应的集合编号
+            p = setIds[p];
         return p;
     }
 
     @Override
-    public int getSize() { return parents.length; }
+    public int getSize() { return setIds.length; }
 }

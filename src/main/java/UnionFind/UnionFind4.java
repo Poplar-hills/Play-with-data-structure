@@ -1,7 +1,7 @@
 package UnionFind;
 
 /*
-* - 基于 rank 的优化
+* - 基于 rank 的优化（看树的高度，而不是树中元素个数）
 * - 原因 SEE：https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
 * */
 

@@ -6,24 +6,24 @@ package UnionFind;
 * */
 
 public class UnionFind3 implements UF {
-    private int[] parents;
+    private int[] setIds;
     private int[] sizes;  // sizes[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树上的元素个数）
 
     public UnionFind3(int size) {
-        parents = new int[size];
+        setIds = new int[size];
         sizes = new int[size];
         for (int i = 0; i < size; i++) {
-            parents[i] = i;
+            setIds[i] = i;
             sizes[i] = 1;
         }
     }
 
     private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= parents.length)
+        if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        while(parents[p] != p)
-            p = parents[p];
+        while(setIds[p] != p)
+            p = setIds[p];
         return p;
     }
 
@@ -41,15 +41,15 @@ public class UnionFind3 implements UF {
             return;
 
         if (sizes[pRoot] < sizes[qRoot]) {  // 判断两个树的 size，将 size 小的树合并到 size 大的树上（加上这个优化后性能有了巨大的提升）。
-            parents[pRoot] = qRoot;
+            setIds[pRoot] = qRoot;
             sizes[qRoot] += sizes[pRoot];
         } else {
-            parents[qRoot] = pRoot;
+            setIds[qRoot] = pRoot;
             sizes[pRoot] += sizes[qRoot];
         }
     }
 
     @Override
-    public int getSize() { return parents.length; }
+    public int getSize() { return setIds.length; }
 }
 
