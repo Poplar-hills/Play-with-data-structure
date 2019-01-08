@@ -199,7 +199,6 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             return false;
         if (e.compareTo(node.e) == 0)  // 相当于 e.equals(node.e)
             return true;
-
         // 递归的最小重复单元
         return contains(e.compareTo(node.e) < 0 ? node.left : node.right, e);
     }
