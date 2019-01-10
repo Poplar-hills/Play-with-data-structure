@@ -21,7 +21,7 @@ public class Student {
 
     @Override
     public int hashCode() {  // 哈希函数
-        int B = 31;  //
+        int B = 31;  // 看成31进制
 
         int hash = 0;
         hash = hash * B + grade;  // int 型的
@@ -41,7 +41,7 @@ public class Student {
         Student another = (Student) o;
         return this.grade == another.grade &&  // 逐一比较成员变量
                 this.clazz == another.clazz &&
-                this.firstname.toLowerCase().equals(another.firstname.toLowerCase()) &&
+                this.firstname.toLowerCase().equals(another.firstname.toLowerCase()) &&  // 可选择是否区分大小写
                 this.lastname.toLowerCase().equals(another.lastname.toLowerCase());
     }
 }
