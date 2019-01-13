@@ -21,7 +21,7 @@ public class HashTableTest {
         System.out.println("s2: " + s2.hashCode() + "\n");
 
         // 测试自己写的 HashTable
-        HashTable<String, Integer> ht = new HashTable<String, Integer>();
+        HashTable<String, Integer> ht = new HashTable<String, Integer>();  // 给 HashTable 开多大的空间（即 HashTable(M) 的 M）对于其性能有很大影响，决定了它可能会有多少哈希冲突。
         ht.add("a", 1);
         System.out.println("HashTable size: " + ht.getSize());
         ht.add("b", 2);

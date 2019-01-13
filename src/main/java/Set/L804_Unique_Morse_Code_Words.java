@@ -10,7 +10,7 @@ public class L804_Unique_Morse_Code_Words {
         for (String word : words) {
             StringBuilder s = new StringBuilder();
             for (int i = 0; i < word.length(); i++)  // encode each character
-                s.append(codes[word.charAt(i) - 'a']);  // charAt 返回i所在位置字符的 ASMII 码；'a'是偏移量
+                s.append(codes[word.charAt(i) - 'a']);  // charAt 返回i所在位置的字符，'a'是偏移量，相减得到 0-25 之间的索引
 
             set.add(s.toString());  // save each word in the set
         }
