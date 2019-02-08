@@ -78,11 +78,11 @@ public class MaxHeap<E extends Comparable<E>> {
     }
 
     private void siftDown(int k) {
-        while (getLeftChildIndex(k) < data.getSize()) {  // 只要左孩子的索引 > 元素个数，则说明还没到达叶子节点，可以继续循环
+        while (getLeftChildIndex(k) < data.getSize()) {  // 只要左孩子的索引 < 元素个数，则说明还没到达叶子节点，可以继续循环
             // 找到位于 k 的节点的左右孩子中较大的那个的索引
             int i = getLeftChildIndex(k);
             if (i + 1 < data.getSize() && data.get(i).compareTo(data.get(i + 1)) < 0)  // i 是左孩子的索引，i + 1 即为右孩子的索引
-                i = i + 1;  // i 保存了左右孩子中值较大的那个的索引
+                i += 1;  // i 保存了左右孩子中值较大的那个的索引
 
             // 用较大的那个与父节点比较，如果父节点大，则 break loop，否则 swap
             if (data.get(k).compareTo(data.get(i)) >= 0)
@@ -103,7 +103,7 @@ public class MaxHeap<E extends Comparable<E>> {
 
     /*
      * 取操作
-     * - 最大值永远都在堆顶上，因此取出最大值后需要填补树顶上的节点。这里的策略是取数组的最后一个元素填补上了，然后再对其进行下沉操作，
+     * - 最大值永远都在堆顶上，因此取出最大值后需要填补树顶上的节点。这里的策略是取数组的最后一个元素填补上，然后再对其进行下沉操作，
      *   来保证不破坏二叉堆的第二个性质。
      * */
     public E extractMax() {
