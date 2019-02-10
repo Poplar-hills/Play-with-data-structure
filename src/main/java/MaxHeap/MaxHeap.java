@@ -30,11 +30,14 @@ package MaxHeap;
 * - 二叉堆的时间复杂度：因为二叉堆是一棵完全二叉树，因此永远不会退化成链表。因此其节点个数和高度之间的关系永远都是
 *   logn 级别的关系。因此其 add 和 extractMax 操作的时间复杂度永远都是 O(logn)。
 *
-* - 堆的 heapify 方法可以将任意数组，如 [15, 17, 19, 15, 22, 16, 28, 30, 41, 62]，整理成最大堆的形状。
-*    - 演示 SEE: https://coding.imooc.com/lesson/207.html#mid=13742（3'22''）
-*    - 复杂度分析：通过 heapify 将数组转化为堆要比将元素逐一插入空堆要快：
-*      - 将 n 个元素逐一插入空堆是 n 个 O(logn) 的复杂度，即 O(nlogn)；
-*      - 而 heapify 的复杂度是 O(n)（计算过程有些复杂，略）。
+* - 用任意数组生成最大堆，
+*   - 因为最大堆可以用数组来表示，因此给定任意数组，只要合理地交换数组中的元素就能将其整理成最大堆的形态，有2种方法：
+*     1. 将数组的元素逐一添加到一个空堆中
+*     2. heapify：从后往前逐一将数组中的非叶子节点进行 sift down 操作，SEE: https://coding.imooc.com/lesson/207.html#mid=13742（3'22''）
+*   - 这两种方式生成的结果不一定一样，但都是最大堆。
+*   - 复杂度上来看，heapify 要比1中的方法快：
+*     - 将 n 个元素逐一插入空堆是 n 个 O(logn) 的复杂度，即 O(nlogn)；
+*     - 而 heapify 的复杂度是 O(n)（计算过程有些复杂，略）
 * */
 
 import Array.Array;
@@ -46,7 +49,7 @@ public class MaxHeap<E extends Comparable<E>> {
 
     public MaxHeap() { data = new Array<E>(); }
 
-    public MaxHeap(E[] arr) {  // 通过任意数组生成一个最大堆的构造函数
+    public MaxHeap(E[] arr) {  // 通过任意数组生成一个最大堆的构造函数（即 heapify 过程）
         data = new Array<E>(arr);  // 先将传入数组转换成我们动态数组（需要给 Array 添加一个新的构造器）
         int lastNonLeafNodeIndex = getParentIndex(getSize() - 1);  // 找到最后一个非叶子节点的索引（即最后一个节点的父节点的索引）
         for (int i = lastNonLeafNodeIndex; i >= 0; i--)  // 从最后一个非叶子节点向前遍历，对每个非叶子节点进行 siftDown
@@ -84,12 +87,12 @@ public class MaxHeap<E extends Comparable<E>> {
             if (i + 1 < data.getSize() && data.get(i).compareTo(data.get(i + 1)) < 0)  // i 是左孩子的索引，i + 1 即为右孩子的索引
                 i += 1;  // i 保存了左右孩子中值较大的那个的索引
 
-            // 用较大的那个与父节点比较，如果父节点大，则 break loop，否则 swap
+            // 用较大的那个与父节点比较，如果父节点大则 break loop，否则 swap（只有用较大的子节点跟父节点比才能保证 swap 之后换上来的新父节点比两个子节点都大，保证最大堆性质不被破坏）
             if (data.get(k).compareTo(data.get(i)) >= 0)
                 break;
 
             data.swap(k, i);
-            k = i;
+            k = i;  // 记得最后要让 while 循环进入下一轮
         }
     }
 
