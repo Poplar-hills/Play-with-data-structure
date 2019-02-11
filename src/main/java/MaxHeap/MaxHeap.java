@@ -94,7 +94,7 @@ public class MaxHeap<E extends Comparable<E>> {
             if (i + 1 < data.getSize() && data.get(i).compareTo(data.get(i + 1)) < 0)  // i 是左孩子的索引，i + 1 即为右孩子的索引
                 i += 1;  // i 保存了左右孩子中值较大的那个的索引
 
-            // 用较大的那个与父节点比较，如果父节点大则 break loop，否则 swap（只有用较大的子节点跟父节点比才能保证 swap 之后换上来的新父节点比两个子节点都大，保证最大堆性质不被破坏）
+            // 用父节点与较大的那个比，如果父节点大则 break loop，否则 swap（只有用较大的子节点跟父节点比才能保证 swap 之后换上来的新父节点比两个子节点都大，保证最大堆性质不被破坏）
             if (data.get(k).compareTo(data.get(i)) >= 0)
                 break;
 
