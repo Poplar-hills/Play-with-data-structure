@@ -35,9 +35,10 @@ package MaxHeap;
 *     1. 将数组的元素逐一添加到一个空堆中
 *     2. heapify：从后往前逐一将数组中的非叶子节点进行 sift down 操作，SEE: https://coding.imooc.com/lesson/207.html#mid=13742（3'22''）
 *   - 这两种方式生成的结果不一定一样，但都是最大堆。
-*   - 复杂度上来看，heapify 要比1中的方法快：
-*     - 将 n 个元素逐一插入空堆是 n 个 O(logn) 的复杂度，即 O(nlogn)；
-*     - 而 heapify 的复杂度是 O(n)（计算过程有些复杂，略）
+*   - 复杂度上来看，heapify 要比方法1中的方法快，因为：
+*     - 方法1中，将 n 个元素逐一插入空堆是 O(n * logn) 即 O(nlogn) 的复杂度；
+*     - 而 heapify 的复杂度是 O(n)，其计算过程较复杂，只要知道 heapify 是由从后往前第一个非叶子节点开始逐一进行
+*       siftDown 操作，因此相当于一上来就把 n/2 个元素刨除掉了，因此相对更快。
 *
 * - 注：heapify 方法中，data = new Array<>(); 这句的复杂度可以近似为 O(1)：
 *   - 我们可以近似的认为，一次开辟空间操作（一次new操作）是一个 O(1) 级别的操作。具体操作系统是如何找到这片空间的、
@@ -88,7 +89,7 @@ public class MaxHeap<E extends Comparable<E>> {
     }
 
     private void siftDown(int k) {
-        while (getLeftChildIndex(k) < data.getSize()) {  // 只要左孩子的索引 < 元素个数，则说明还没到达叶子节点，可以继续循环
+        while (getLeftChildIndex(k) < data.getSize()) {  // 只要左孩子的索引 < 元素个数就说明还没到达叶子节点，可以继续循环
             // 找到位于 k 的节点的左右孩子中较大的那个的索引
             int i = getLeftChildIndex(k);
             if (i + 1 < data.getSize() && data.get(i).compareTo(data.get(i + 1)) < 0)  // i 是左孩子的索引，i + 1 即为右孩子的索引
