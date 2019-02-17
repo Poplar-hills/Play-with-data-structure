@@ -72,6 +72,7 @@ package BST;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 public class BST<E extends Comparable<E>> {  // 可比较的泛型
     Node root;
@@ -261,24 +262,24 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     /*
      * Traverse
      * */
-    public void preOrderTraverse() {  // pre-order（前序），即在先访问节点，再访问左右子树
-        preOrderTraverse(root);
+    public void preOrderTraverse(Consumer handler) {  // pre-order（前序），即在先访问节点，再访问左右子树
+        preOrderTraverse(root, handler);
     }
 
-    private void preOrderTraverse(Node node) {
+    private void preOrderTraverse(Node node, Consumer handler) {
         if (node == null) return;
-        System.out.println(node.e);  // 先访问节点
-        preOrderTraverse(node.left);  // 再访问左右子树。如果是中序遍历就是把上面访问节点的语句放在这句下面
-        preOrderTraverse(node.right);  // 如果是后序遍历就是把上面访问节点的语句放在这句下面
+        handler.accept(node);  // 先访问节点
+        preOrderTraverse(node.left, handler);  // 再访问左右子树。如果是中序遍历就是把上面访问节点的语句放在这句下面
+        preOrderTraverse(node.right, handler);  // 如果是后序遍历就是把上面访问节点的语句放在这句下面
     }
 
-    public void preOrderTraverseNR() {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
+    public void preOrderTraverseNR(Consumer handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
         Stack<Node> stack = new Stack<Node>();  // 用栈实现遍历
         if (root == null) return;
         stack.push(root);
         while (!stack.isEmpty()) {
             Node curr = stack.pop();
-            System.out.println(curr);
+            handler.accept(curr);
 
             if (curr.right != null)
                 stack.push(curr.right);  // 因为栈是后入先出，所以要先压入右子节点，再压入左子节点，让左子节点先出栈
@@ -287,7 +288,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void inOrderTraverseNR() {  // 中序遍历的非递归实现
+    public void inOrderTraverseNR(Consumer handler) {  // 中序遍历的非递归实现
         Stack<Node> stack = new Stack<Node>();
         if (root == null) return;
 
@@ -302,18 +303,18 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
             if (!stack.isEmpty()) {  // 当 curr == null，此时到达叶子节点，需要变换方向
                 parent = stack.pop();  // 获取上一层节点
-                System.out.println(curr);  // 访问节点
+                handler.accept(curr);  // 访问节点
                 curr = parent.right;
             }
         }
     }
 
-    public void levelOrderTraverseNR() {  // 层序遍历（广度优先遍历）
+    public void levelOrderTraverseNR(Consumer handler) {  // 层序遍历（广度优先遍历）
         Queue<Node> queue = new LinkedList<Node>();  // 使用链表模拟的队列作为遍历时使用的数据结构（或者直接使用队列也行）
         queue.add(root);
         while (!queue.isEmpty()) {
             Node curr = queue.remove();
-            System.out.println(curr.e);
+            handler.accept(curr);
 
             if (curr.left != null)
                 queue.add(curr.left);
@@ -322,21 +323,21 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void levelOrderTraverse() {  // 层序遍历的递归实现
+    public void levelOrderTraverse(Consumer handler) {  // 层序遍历的递归实现
         if (root == null) return;
-        System.out.println(root.e);
-        levelOrderTraverse(root);
+        handler.accept(root);
+        levelOrderTraverse(root, handler);
     }
 
-    private void levelOrderTraverse(Node curr) {
+    private void levelOrderTraverse(Node curr, Consumer handler) {
         if (curr.left != null)
-            System.out.println(curr.left.e);
+            handler.accept(curr.left);
         if (curr.right != null)
-            System.out.println(curr.right.e);
+            handler.accept(curr.right);
         if (curr.left != null)
-            levelOrderTraverse(curr.left);
+            levelOrderTraverse(curr.left, handler);
         if (curr.right != null)
-            levelOrderTraverse(curr.right);
+            levelOrderTraverse(curr.right, handler);
     }
 
     /*
