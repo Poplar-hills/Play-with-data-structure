@@ -24,7 +24,7 @@ public class BSTTest {
 
         // 测试遍历 bst
         System.out.println("\nTesting level order traversing...");
-        bst.levelOrderTraverse();
+        bst.levelOrderTraverse(node -> System.out.println(node.toString()));
 
         // 测试 getMin, getMax
         System.out.println("\nTesting getMin, getMax...");
