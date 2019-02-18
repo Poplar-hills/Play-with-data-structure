@@ -238,25 +238,26 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node.right == null ? node : getMax(node.right);
     }
 
+
     public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下 ceil，思路类似）
-        Node floor = floor(root, e, false);
-        return floor != null ? floor.e : null;
+        if (size == 0 || e.compareTo(getMin(root).e) < 0)  // 如果不存在 e 的 floor 值（树为空或 e 比树中的最小值还小）
+            return null;
+        return floor(root, e).e;
     }
 
-    private Node floor(Node node, E e, boolean isLargerThanParent) {
+    private Node floor(Node node, E e) {
         if (node == null)
             return null;
-        if (e.compareTo(node.e) == 0)
+        if (e.compareTo(node.e) == 0)  // 如果 e == node.e，则该 node 就是 e 的 floor 节点
             return node;
-        if (e.compareTo(node.e) > 0) {
-            Node floor = floor(node.right, e, true);
-            return floor == null ? node : floor;  // 若 floor == null，说明当前节点值就是 floor；否则说明找到了节点值等于 e 的节点
-        }
-        return isLargerThanParent
-                ? null  // 若 e 小于当前节点值，但又大于父节点值（说明当前处于某个右倾分支上，如 -6-8，e=7；此时 e < 当前节点值8，又 > 父节点值6，因此父节点值6就是 floor），因此不再继续递归，直接返回 null 到上一层取父节点值作为结果
-                : floor(node.left, e, false);  // 若 e 小于当前节点值，同时又小于父节点值（说明当前处于某个左倾分支上），则继续向左递归，此时有两种结果：
-        // 1. 返回 null：此时递归到底，且 e 比一路上的节点值都小，因此没有整棵 BST 没有 floor
-        // 2. 返回值不为 null：即没有递归到底，此时的唯一可能就是找到了节点值等于 e 的节点（e.compareTo(node.e) == 0）
+        if (e.compareTo(node.e) < 0)  // 如果 e < node.e，则 e 的 floor 节点一定在 node 的左子树中（因为 floor 一定小于 e）
+            return floor(node.left, e);
+        // 如果 e > node.e，则 node 可能是 e 的 floor 节点，也可能不是，需要尝试在 node 的右子树中寻找。
+        // 因为右子树中的节点一定都 > node，因此如果其中有 < e 的节点就一定是 floor。
+        Node potentialFloor = floor(node.right, e);
+        return potentialFloor != null
+                ? potentialFloor
+                : node;
     }
 
     /*
