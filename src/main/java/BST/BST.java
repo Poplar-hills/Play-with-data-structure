@@ -186,7 +186,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             // 2. 用这个节点取代待删除节点的位置
             // 3. 删除待删除节点
             Node successor = getMin(node.right);
-            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先给 successor.right 赋值 SEE: https://coding.imooc.com/learn/questiondetail/84029.html
+            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先 removeMin（SEE: https://coding.imooc.com/learn/questiondetail/84029.html）
             successor.left = node.left;  // 再给 successor.left 赋值，因为 removeMin 中要找到 node.right 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
             node.left = node.right = null;
             return successor;
@@ -221,9 +221,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     private Node getMin(Node node) {
-        if (node.left == null)  // 终止条件是向左走到头，不再有左孩子的节点
-            return node;
-        return getMin(node.left);
+        return node.left == null ? node : getMin(node.left);
     }
 
     public E getMax() {
@@ -233,9 +231,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     private Node getMax(Node node) {
-        if (node.right == null)
-            return node;
-        return getMax(node.right);
+        return node.right == null ? node : getMax(node.right);
     }
 
     public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下 ceil，思路类似）
