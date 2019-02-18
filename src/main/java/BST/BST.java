@@ -121,6 +121,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     * 删操作
     * */
     public E removeMin() {  // 从 BST 中删除值最小的节点
+        if (root == null)
+            throw new IllegalArgumentException("removeMin failed");
         E min = getMin();  // 找到最小值
         root = removeMin(root);  // 从树上删除最小值节点和上一步的找到最小值实际上是分离的操作
         return min;
@@ -138,6 +140,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     public E removeMax() {
+        if (root == null)
+            throw new IllegalArgumentException("removeMax failed");
         E min = getMax();
         root = removeMax(root);
         return min;
