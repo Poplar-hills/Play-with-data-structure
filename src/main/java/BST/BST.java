@@ -275,7 +275,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     public void preorderTraverseNR(Consumer handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
-        Stack<Node> stack = new Stack<Node>();  // 采用栈实现（层序遍历的非递归实现采用队列）
+        Stack<Node> stack = new Stack<Node>();  // 采用 stack 实现（levelOrderTraverseNR 采用 queue 实现）
         if (root == null) return;
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -288,29 +288,26 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void inorderTraverseNR(Consumer handler) {  // 中序遍历的非递归实现
-        Stack<Node> stack = new Stack<Node>();
-        if (root == null) return;
+    public void inorderTraverseNR(Consumer handler) {  // 使用 stack 实现（对比 preorderTraverseNR 和 levelOrderTraverseNR）
+        if (root == null)
+            throw new IllegalArgumentException("inorderTraverse failed.");
 
-        Node curr, parent;
-        curr = root;
-        stack.push(curr);
+        Stack<Node> stack = new Stack();
+        Node curr = root;
+
         while (curr != null || !stack.isEmpty()) {
-            while (curr != null) {  // 一直往一个方向走，不断获取左子树，直到叶子节点
-                stack.push(curr.left);
+            while (curr != null) {  // Step 1: 不断入栈左孩子，直到叶子节点
+                stack.push(curr);
                 curr = curr.left;
             }
-
-            if (!stack.isEmpty()) {  // 当 curr == null，此时到达叶子节点，需要变换方向
-                parent = stack.pop();  // 获取上一层节点
-                handler.accept(curr);  // 访问节点
-                curr = parent.right;
-            }
+            curr = stack.pop();  // Step 2: 出栈一个节点并访问它
+            handler.accept(curr);
+            curr = curr.right;   // Step 3: 调转方向，开始处理右孩子
         }
     }
 
     public void levelOrderTraverseNR(Consumer handler) {  // 层序遍历（广度优先遍历）
-        Queue<Node> queue = new LinkedList<Node>();  // 使用链表模拟的队列作为遍历时使用的数据结构（或者直接使用队列也行）（前序遍历的非递归实现采用栈）
+        Queue<Node> queue = new LinkedList<Node>();  // 使用链表模拟的 queue 实现（或者直接使用队列也行）（对比 preorderTraverseNR、inorderTraverseNR）
         queue.add(root);
         while (!queue.isEmpty()) {
             Node curr = queue.remove();
