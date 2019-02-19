@@ -263,18 +263,18 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     /*
      * Traverse
      * */
-    public void preOrderTraverse(Consumer handler) {  // pre-order（前序），即在先访问节点，再访问左右子树
-        preOrderTraverse(root, handler);
+    public void preorderTraverse(Consumer handler) {  // pre-order（前序），即在先访问节点，再访问左右子树
+        this.preorderTraverse(root, handler);
     }
 
-    private void preOrderTraverse(Node node, Consumer handler) {
+    private void preorderTraverse(Node node, Consumer handler) {
         if (node == null) return;
         handler.accept(node);  // 先访问节点
-        preOrderTraverse(node.left, handler);  // 再访问左右子树。如果是中序遍历就是把上面访问节点的语句放在这句下面
-        preOrderTraverse(node.right, handler);  // 如果是后序遍历就是把上面访问节点的语句放在这句下面
+        this.preorderTraverse(node.left, handler);  // 再访问左右子树。如果是中序遍历就是把上面访问节点的语句放在这句下面
+        this.preorderTraverse(node.right, handler);  // 如果是后序遍历就是把上面访问节点的语句放在这句下面
     }
 
-    public void preOrderTraverseNR(Consumer handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
+    public void preorderTraverseNR(Consumer handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
         Stack<Node> stack = new Stack<Node>();  // 采用栈实现（层序遍历的非递归实现采用队列）
         if (root == null) return;
         stack.push(root);
@@ -288,7 +288,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void inOrderTraverseNR(Consumer handler) {  // 中序遍历的非递归实现
+    public void inorderTraverseNR(Consumer handler) {  // 中序遍历的非递归实现
         Stack<Node> stack = new Stack<Node>();
         if (root == null) return;
 
