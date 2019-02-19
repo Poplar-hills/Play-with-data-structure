@@ -204,6 +204,20 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
     public boolean isEmpty() { return size == 0; }
 
+    public E search(E e) {  // 在 BST 中查找 key 所对应的 value（与 contains 的实现非常相似）
+        return search(root, e);
+    }  // 和 contains 的实现相差无几
+
+    private E search(Node node, E e) {
+        if (node == null)
+            return null;
+        if (e.compareTo(node.e) < 0)
+            return search(node.left, e);
+        if (e.compareTo(node.e) > 0)
+            return search(node.right, e);
+        return node.e;
+    }
+
     public boolean contains(E e) {
         return contains(root, e);
     }
