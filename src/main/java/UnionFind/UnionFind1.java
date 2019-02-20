@@ -42,6 +42,12 @@ public class UnionFind1 implements UF {
             setIds[i] = i;
     }
 
+    private int find(int p) {  // 查找元素 p 所对应的集合编号，O(1) 复杂度
+        if (p < 0 || p >= setIds.length)
+            throw new IllegalArgumentException("find failed. p is out of bound.");
+        return setIds[p];
+    }
+
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(1) 复杂度
         return find(p) == find(q);
@@ -58,12 +64,6 @@ public class UnionFind1 implements UF {
         for (int i = 0; i < setIds.length; i++)
             if (setIds[i] == pSetId)
                 setIds[i] = qSetId;
-    }
-
-    private int find(int p) {  // 查找元素 p 所对应的集合编号，O(1) 复杂度
-        if (p < 0 || p >= setIds.length)
-            throw new IllegalArgumentException("find failed. p is out of bound.");
-        return setIds[p];
     }
 
     @Override

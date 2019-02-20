@@ -26,6 +26,21 @@ public class UnionFind2 implements UF {
             setIds[i] = i;
     }
 
+    private int findNR(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
+        if (p < 0 || p >= setIds.length)
+            throw new IllegalArgumentException("find failed. p is out of bound.");
+
+        while (setIds[p] != p)  // 循环找到 p 的根节点，只有根节点的值才等于其 setId，因此找到了根节点就找到了 p 所对应的集合编号
+            p = setIds[p];
+        return p;
+    }
+
+    private int find(int p) {  // 递归实现
+        if (p < 0 || p >= setIds.length)
+            throw new IllegalArgumentException("find failed.");
+        return setIds[p] == p ? p : find(setIds[p]);
+    }
+
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
         return find(p) == find(q);
@@ -40,15 +55,6 @@ public class UnionFind2 implements UF {
             return;
 
         setIds[pRoot] = qRoot;  // 将 p 所在的根节点的集合编号置为 q 所在的根节点的集合编号
-    }
-
-    private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= setIds.length)
-            throw new IllegalArgumentException("find failed. p is out of bound.");
-
-        while (setIds[p] != p)  // 循环找到 p 的根节点，只有根节点的值才等于其 setId，因此找到了根节点就找到了 p 所对应的集合编号
-            p = setIds[p];
-        return p;
     }
 
     @Override

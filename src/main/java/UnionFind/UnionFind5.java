@@ -3,6 +3,9 @@ package UnionFind;
 /*
  * - 基于路径压缩（其中一个方式）的优化，即通过压缩树的高度来较小 O(h) 中的 h，以达到效率优化的目的（一种非常经典的优化手段）
  * - 原因 SEE：https://coding.imooc.com/lesson/207.html#mid=14170（0'00''）
+ *
+ * - UnionFind5 的时间复杂度近乎是 O(1) 的，是超级快的。因为每一次查询都会进行路径压缩，因此每一个元素都离根节点非常近
+ *   （或者说层数非常少），当层数为1的时候，查询的复杂度就是 O(1)。
  * */
 
 public class UnionFind5 implements UF {
