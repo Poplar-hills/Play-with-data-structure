@@ -35,12 +35,103 @@ package BTree;
 *          中 ∴ 比较节点的速度远快于访问节点的速度。
 *        - ∵ 二叉树是两路查找，而 B-tree 是多路查找 ∴ 对于相同数量的元素，B-tree 的高度 < 二叉树的高度。
 *        - ∵ B-tree 的高度较小 ∴ 在查询过程中比较节点的次数多，而访问节点的次数少，即磁盘 IO 的次数少 ∴ 作为数据库索引的查找效
-*          率高于二叉树。
-*   - Q:
-*
+*          率高于二叉树 ∴ 说 B-tree 是为外存而生的。
 *
 * */
 
-public class BTree<E extends Comparable<E>> {
+import javafx.util.Pair;
 
+public class BTree<K extends Comparable<K>, V> {
+    private int m;  // B-tree 的阶（即一个节点最多有多少个子节点）
+    private Node root;
+    private int size;
+
+    private class Node {
+        private Entry[] entries;
+        private Node[] children;
+
+        public Node() {
+            entries = (Entry[]) new Object[m - 1];
+            children = (Node[]) new Object[m];
+        }
+
+        public Pair<Integer, V> search(K key) {
+            for (int i = 0; i < entries.length; i++) {
+                Entry en = entries[i];
+                if (en.key.compareTo(key) == 0)
+                    return new Pair<>(i, en.value);
+                if (en.key.compareTo(key) > 0)
+                    return new Pair<>(i, null);
+            }
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0; i < entries.length; i++) {
+                s.append(entries[i] == null ? "" : entries[i].toString());
+                if (i != entries.length - 1)
+                    s.append(",");
+            }
+            return "[" + s.toString() + "]";
+        }
+    }
+
+    private class Entry {
+        private K key;
+        private V value;
+
+        public Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return key + ":" + value;
+        }
+    }
+
+    public BTree(int m) {
+        this.m = m;
+        root = null;
+    }
+
+    /*
+    * 增操作
+    * */
+    public void insert() {
+
+    }
+
+    /*
+    * 查操作
+    * */
+    public V search(K key) {
+        if (key == null)
+            throw new IllegalArgumentException("search failed.");
+        return search(root, key);
+    }
+
+    private V search(Node node, K key) {
+        if (node == null)
+            return null;
+        Pair<Integer, V> result = node.search(key);
+        if (result.getValue() != null) {
+            return result.getValue();
+        } else {
+            Node childNode = node.children[result.getKey()];
+            return search(childNode, key);
+        }
+    }
+
+    public int getSize() { return size; }
+
+    public boolean isEmpty() { return size == 0; }
+
+    public static void main(String[] args) {
+        BTree<Integer, Integer> bTree = new BTree<Integer, Integer>(5);
+        System.out.println(bTree.root);
+    }
 }
