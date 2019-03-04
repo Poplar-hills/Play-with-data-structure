@@ -30,7 +30,7 @@ package MaxHeap;
 * - 二叉堆的时间复杂度：因为二叉堆是一棵完全二叉树，因此永远不会退化成链表。因此其节点个数和高度之间的关系永远都是
 *   logn 级别的关系。因此其 add 和 extractMax 操作的时间复杂度永远都是 O(logn)。
 *
-* - 用任意数组生成最大堆，
+* - 用任意数组生成最大堆（heapify）：
 *   - 因为最大堆可以用数组来表示，因此给定任意数组，只要合理地交换数组中的元素就能将其整理成最大堆的形态，有2种方法：
 *     1. 将数组的元素逐一添加到一个空堆中
 *     2. heapify：从后往前逐一将数组中的非叶子节点进行 sift down 操作，SEE: https://coding.imooc.com/lesson/207.html#mid=13742（3'22''）
@@ -89,10 +89,10 @@ public class MaxHeap<E extends Comparable<E>> {
     }
 
     private void siftDown(int k) {
-        while (getLeftChildIndex(k) < data.getSize()) {  // 只要左孩子的索引 < 元素个数就说明还没到达叶子节点，可以继续循环
+        while (getLeftChildIndex(k) < getSize()) {  // 只要左孩子的索引 < 元素个数就说明还没到达叶子节点，可以继续循环
             // 找到位于 k 的节点的左右孩子中较大的那个的索引
             int i = getLeftChildIndex(k);
-            if (i + 1 < data.getSize() && data.get(i).compareTo(data.get(i + 1)) < 0)  // i 是左孩子的索引，i + 1 即为右孩子的索引
+            if (i + 1 < getSize() && data.get(i + 1).compareTo(data.get(i)) > 0)  // i+1 是右孩子的索引，i+1 < getSize() 是要保证有右孩子
                 i += 1;  // i 保存了左右孩子中值较大的那个的索引
 
             // 用父节点与较大的那个比，如果父节点大则 break loop，否则 swap（只有用较大的子节点跟父节点比才能保证 swap 之后换上来的新父节点比两个子节点都大，保证最大堆性质不被破坏）
@@ -109,7 +109,7 @@ public class MaxHeap<E extends Comparable<E>> {
      * */
     public void add(E e) {  // 向堆中添加元素
         data.addLast(e);  // 先添加到数组末尾，即完全二叉树的最后
-        siftUp(data.getSize() - 1);  // 上浮，添加节点不能破坏前面说的二叉堆的第二个性质，因此要与该节点路径上的祖先节点一一比较，如果大于祖先节点则交换
+        siftUp(getSize() - 1);  // 上浮，添加节点不能破坏前面说的二叉堆的第二个性质，因此要与该节点路径上的祖先节点一一比较，如果大于祖先节点则交换
     }
 
     /*
