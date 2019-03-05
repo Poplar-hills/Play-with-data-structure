@@ -34,7 +34,7 @@ public class PriorityQueue<E extends Comparable<E>> implements Queue<E> {
 
     public PriorityQueue() { maxHeap = new MaxHeap(); }
 
-    public void enqueue(E e) { maxHeap.add(e); }
+    public void enqueue(E e) { maxHeap.insert(e); }
 
     public E dequeue() { return maxHeap.extractMax(); }
 

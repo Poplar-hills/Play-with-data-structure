@@ -28,7 +28,7 @@ package MaxHeap;
 * - 对于堆来说，唯一的取值操作就是取出堆顶元素（对于最大堆来说就是取出最大值，最小堆就是取出最小值）。
 *
 * - 二叉堆的时间复杂度：因为二叉堆是一棵完全二叉树，因此永远不会退化成链表。因此其节点个数和高度之间的关系永远都是
-*   logn 级别的关系。因此其 add 和 extractMax 操作的时间复杂度永远都是 O(logn)。
+*   logn 级别的关系。因此其 insert 和 extractMax 操作的时间复杂度永远都是 O(logn)。
 *
 * - 用任意数组生成最大堆（heapify）：
 *   - 因为最大堆可以用数组来表示，因此给定任意数组，只要合理地交换数组中的元素就能将其整理成最大堆的形态，有2种方法：
@@ -107,7 +107,7 @@ public class MaxHeap<E extends Comparable<E>> {
     /*
      * 添操作
      * */
-    public void add(E e) {  // 向堆中添加元素
+    public void insert(E e) {  // 向堆中添加元素
         data.addLast(e);  // 先添加到数组末尾，即完全二叉树的最后
         siftUp(getSize() - 1);  // 上浮，添加节点不能破坏前面说的二叉堆的第二个性质，因此要与该节点路径上的祖先节点一一比较，如果大于祖先节点则交换
     }
@@ -127,7 +127,7 @@ public class MaxHeap<E extends Comparable<E>> {
 
     /*
     * 改操作
-    * - 该操作相当于 extractMax + add(e)。但这两个方法组合的话就是2次 O(logn) 的复杂度，稍微低效了点。更高效的做法是，直接用 e 替换
+    * - 该操作相当于 extractMax + insert(e)。但这两个方法组合的话就是2次 O(logn) 的复杂度，稍微低效了点。更高效的做法是，直接用 e 替换
     *   堆顶元素，然后再 siftDown，这样的复杂度是1次 O(logn)。
     * */
     public E replace(E e) {

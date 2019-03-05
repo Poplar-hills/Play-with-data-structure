@@ -12,7 +12,7 @@ public class MaxHeapTest {
 
         for (int i = 0; i < n; i++) {
             int value = random.nextInt(20);
-            heap.add(value);
+            heap.insert(value);
             randomArr[i] = value;
         }
 
