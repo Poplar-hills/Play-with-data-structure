@@ -28,7 +28,7 @@ public class UnionFind5 implements UF {
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
         while (setIds[p] != p) {
-            setIds[p] = setIds[setIds[p]];  // 将爷爷节点的编号赋给当前的集合编号，即将 p 链接到了其爷爷节点上
+            setIds[p] = setIds[setIds[p]];  // 就修改这一行，将爷爷节点的编号赋给当前的集合编号，即将 p 链接到了其爷爷节点上
             p = setIds[p];  // 在拿到爷爷节点的编号后再继续循环，从而跳过了 p 原本的父节点，直接从爷爷节点继续遍历
         }
         return p;
