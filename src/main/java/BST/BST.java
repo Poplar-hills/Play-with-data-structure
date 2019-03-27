@@ -85,8 +85,8 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 public class BST<E extends Comparable<E>> {  // 可比较的泛型
-    Node root;
-    int size;
+    private Node root;
+    private int size;
 
     private class Node {
         private E e;

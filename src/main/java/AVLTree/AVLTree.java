@@ -46,8 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AVLTree<E extends Comparable<E>> {
-    Node root;
-    int size;
+    private Node root;
+    private int size;
 
     private class Node {
         private E e;
@@ -87,7 +87,7 @@ public class AVLTree<E extends Comparable<E>> {
         return node.height;
     }
 
-    public void inOrderTraverse(Node node, List<E> elements) {
+    private void inOrderTraverse(Node node, List<E> elements) {
         if (node == null)
             return;
         inOrderTraverse(node.left, elements);

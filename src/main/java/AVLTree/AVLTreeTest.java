@@ -1,8 +1,5 @@
 package AVLTree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // 从量级上来说，AVL tree 和红黑树的效率都是 O(logn)。但从统计上来说，红黑树会比 AVL tree 更高一些。
 
 public class AVLTreeTest {
@@ -25,10 +22,5 @@ public class AVLTreeTest {
         System.out.println("size: " + avlTree.getSize());
         System.out.println("isBST: " + avlTree.isBST(avlTree.getRoot()));
         System.out.println("isBalanced: " + avlTree.isBalanced());
-
-        System.out.println("\nTesting inOrderTraverse");
-        List<Integer> list = new ArrayList<Integer>();
-        avlTree.inOrderTraverse(avlTree.root, list);
-        System.out.println(list);  // should print out [1, 2, 4, 5, 6, 7, 8, 9]
     }
 }
