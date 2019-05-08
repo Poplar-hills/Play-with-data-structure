@@ -47,7 +47,7 @@ public class Array<E> {
         if (size == getCapacity())
             resize(getCapacity() * 2);
 
-        for(int i = size - 1; i >= index; i--)
+        for (int i = size - 1; i >= index; i--)
             data[i + 1] = data[i];
         data[index] = e;
         size++;

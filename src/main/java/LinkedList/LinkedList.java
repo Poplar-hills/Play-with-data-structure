@@ -26,9 +26,6 @@ package LinkedList;
  *   链表具有天然的 1.动态性质 2.递归性质。其递归性质 SEE：L203_Remove_Linked_List_Elements - Solution3
  * */
 
-import Array.Array;
-import javafx.util.Pair;
-
 public class LinkedList<E> {
 
     private Node dummyHead;
