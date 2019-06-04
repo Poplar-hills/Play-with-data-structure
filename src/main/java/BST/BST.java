@@ -299,7 +299,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     public void preorderTraverseNR(Consumer handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
-        Stack<Node> stack = new Stack<Node>();  // 采用 stack 实现（levelOrderTraverseNR 采用 queue 实现）
+        Stack<Node> stack = new Stack<>();  // 采用 stack 实现（levelOrderTraverseNR 采用 queue 实现）
         if (root == null) return;
         stack.push(root);
         while (!stack.isEmpty()) {
@@ -316,7 +316,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
 
-        Stack<Node> stack = new Stack();
+        Stack<Node> stack = new Stack<>();
         Node curr = root;
 
         while (curr != null || !stack.isEmpty()) {
@@ -331,7 +331,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     public void levelOrderTraverseNR(Consumer handler) {  // 层序遍历（广度优先遍历）
-        Queue<Node> queue = new LinkedList<Node>();  // 使用链表模拟的 queue 实现（或者直接使用队列也行）（对比 preorderTraverseNR、inorderTraverseNR）
+        Queue<Node> queue = new LinkedList<>();  // 使用链表模拟的 queue 实现（或者直接使用队列也行）（对比 preorderTraverseNR、inorderTraverseNR）
         queue.add(root);
         while (!queue.isEmpty()) {
             Node curr = queue.remove();
