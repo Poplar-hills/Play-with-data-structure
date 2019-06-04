@@ -330,7 +330,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void postorderTraversalNR(Consumer handler) {
+    public void postorderTraverseNR(Consumer handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
 
