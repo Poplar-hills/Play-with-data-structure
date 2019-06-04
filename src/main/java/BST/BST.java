@@ -330,6 +330,30 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
+    public void postorderTraversalNR(Consumer handler) {
+        if (root == null)
+            throw new IllegalArgumentException("inorderTraverse failed.");
+
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node temp = stack.peek();
+            if (temp.left != null) {
+                stack.push(temp.left);
+                temp.left = null;
+            }
+            else if (temp.right != null) {
+                stack.push(temp.right);
+                temp.right = null;
+            }
+            else {
+                handler.accept(temp.e);
+                stack.pop();
+            }
+        }
+    }
+
     public void levelOrderTraverseNR(Consumer handler) {  // 层序遍历（广度优先遍历）
         Queue<Node> queue = new LinkedList<>();  // 使用链表模拟的 queue 实现（或者直接使用队列也行）（对比 preorderTraverseNR、inorderTraverseNR）
         queue.add(root);
