@@ -96,7 +96,7 @@ public class MaxHeap<E extends Comparable<E>> {
         }
     }
 
-    private void siftDown(int k) {
+    private void siftDown(int k) {  // 用于 extract, replace, heapify 操作中
         while (getLeftChildIndex(k) < getSize()) {  // 只要左孩子的索引 < 元素个数就说明还没到达叶子节点，可以继续循环
             // 找到位于 k 的节点的左右孩子中较大的那个的索引
             int i = getLeftChildIndex(k);
@@ -113,10 +113,10 @@ public class MaxHeap<E extends Comparable<E>> {
     }
 
     /*
-     * 添操作
+     * 增操作
      * */
     public void insert(E e) {  // 向堆中添加元素
-        data.addLast(e);  // 先添加到数组末尾，即完全二叉树的最后
+        data.addLast(e);  // 先添加到数组末尾，即完全二叉树的末尾
         siftUp(getSize() - 1);  // 上浮，添加节点不能破坏前面说的二叉堆的第二个性质，因此要与该节点路径上的祖先节点一一比较，如果大于祖先节点则交换
     }
 
