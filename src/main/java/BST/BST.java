@@ -344,8 +344,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 stack.push(curr.left);
                 curr.left = null;
             }
-            else if (curr.right != null) {  // 注意这里是 else if，即若 curr 同时有左、右节点，则处理完左节点之后直接进入下次循环，不处理右节点
-                stack.push(curr.right);
+            else if (curr.right != null) {  // 注意这里是 else if，即若 curr 同时有左、右节点，则处理完左节点之后直接进入下次循环，而不
+                stack.push(curr.right);     // 处理右节点。相当于先向左走到底，再开始转向右边，最后当左、右都没有子节点了，再处理父节点
                 curr.right = null;
             }
             else {
