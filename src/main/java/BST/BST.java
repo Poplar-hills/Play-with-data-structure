@@ -339,17 +339,17 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         stack.push(root);
 
         while (!stack.isEmpty()) {
-            Node temp = stack.peek();
-            if (temp.left != null) {
-                stack.push(temp.left);
-                temp.left = null;
+            Node curr = stack.peek();
+            if (curr.left != null) {
+                stack.push(curr.left);
+                curr.left = null;
             }
-            else if (temp.right != null) {
-                stack.push(temp.right);
-                temp.right = null;
+            else if (curr.right != null) {  // 注意这里是 else if，即若 curr 同时有左、右节点，则处理完左节点之后直接进入下次循环，不处理右节点
+                stack.push(curr.right);
+                curr.right = null;
             }
             else {
-                handler.accept(temp.e);
+                handler.accept(curr.e);  // 若一个节点左/右子节点为空则访问该节点，这也是上面在将左/右子节点入栈后即置空的原因
                 stack.pop();
             }
         }
