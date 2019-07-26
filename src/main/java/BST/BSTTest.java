@@ -5,9 +5,9 @@ import java.util.ArrayList;
 /*
 *           5
 *         /   \
-*        2    6
-*      /  \    \
-*     0    3    8
+*        2     6
+*       /  \    \
+*      0    3    8
 * */
 
 public class BSTTest {

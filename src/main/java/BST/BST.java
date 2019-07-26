@@ -24,7 +24,7 @@ package BST;
 *       13   22               13    22  29  34        13   22 29  42
 *           /  \             /  \  /
 *         18   25           8  15 20
-*          满二叉树                完全二叉树              完美二叉树
+*           满二叉树                完全二叉树               完美二叉树
 *
 *   - 完全二叉树不一定是满二叉树（不一定每个节点都有两个子节点），反之亦然；
 *   - 完全二叉树因为每次添加节点都是在“补全”这棵树，因此永远不会退化成链表（即节点个数和高度之间的关系永远都是 logn 的关系）；
@@ -49,8 +49,8 @@ package BST;
 *     b. 都小于其右子树上的任意节点的值
 *   3. 每个节点上存储的值必须具有可比较性
 *
-* - 遍历
-*   - 对 BST 的深度优先遍历又分为前序、中序、后序3种遍历方法，其中：
+* - 遍历：
+*   - 对 BST 的深度优先遍历又分为前序、中序、后序3种遍历方法，其中（使用上面的完美二叉树举例）：
 *     - 前序：当前节点->左子树->右子树。树上节点的访问顺序是：28->16->13->22->30->29->42（上层->底层）。
 *     - 中序：左子树->当前节点->右子树。树上节点的访问顺序是：13->16->22->28->29->30->42（因为每个节点的左子树都比该节点小，而右子树
 *       都比该节点大，因此中序遍历的结果是从小到大顺序排列的）。
@@ -345,7 +345,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 curr.left = null;
             }
             else if (curr.right != null) {  // 注意这里是 else if，即若 curr 同时有左、右节点，则处理完左节点之后直接进入下次循环，而不
-                stack.push(curr.right);     // 处理右节点。相当于先向左走到底，再开始转向右边，最后当左、右都没有子节点了，再处理父节点
+                stack.push(curr.right);     // 处理右节点。相当26t于先向左走到底，再开始转向右边，最后当左、右都没有子节点了，再处理父节点
                 curr.right = null;
             }
             else {
@@ -370,19 +370,18 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
     public void levelOrderTraverse(Consumer handler) {  // 层序遍历的递归实现
         if (root == null) return;
-        handler.accept(root);
-        levelOrderTraverse(root, handler);
+        Queue<Node> q = new LinkedList<>();
+        q.offer(root);
+        levelOrderTraverse(q, handler);
     }
 
-    private void levelOrderTraverse(Node curr, Consumer handler) {
-        if (curr.left != null)
-            handler.accept(curr.left);
-        if (curr.right != null)
-            handler.accept(curr.right);
-        if (curr.left != null)
-            levelOrderTraverse(curr.left, handler);
-        if (curr.right != null)
-            levelOrderTraverse(curr.right, handler);
+    private void levelOrderTraverse(Queue<Node> q, Consumer handler) {
+        if (q.isEmpty()) return;
+        Node curr = q.poll();
+        handler.accept(curr);
+        if (curr.left != null) q.offer(curr.left);
+        if (curr.right != null) q.offer(curr.right);
+        levelOrderTraverse(q, handler);
     }
 
     /*
