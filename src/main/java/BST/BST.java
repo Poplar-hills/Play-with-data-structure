@@ -330,27 +330,27 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             curr = curr.right;   // Step 3: 调转方向，开始处理右孩子
         }
     }
-
+    
     public void postorderTraverseNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
 
         Stack<Node> stack = new Stack<>();
-        stack.push(root);
+        Node prev = null, curr = root;  // 多维护一个 prev 指针，记录上一次访问的节点
 
-        while (!stack.isEmpty()) {
-            Node curr = stack.peek();
-            if (curr.left != null) {
-                stack.push(curr.left);
-                curr.left = null;
+        while (curr != null || !stack.isEmpty()) {
+            while (curr != null) {  // 先往左走到底，一路上入栈所有节点
+                stack.push(curr);
+                curr = curr.left;
             }
-            else if (curr.right != null) {  // 注意这里是 else if，即若 curr 同时有左、右节点，则处理完左节点之后直接进入下次循环，而不
-                stack.push(curr.right);     // 处理右节点。相当26t于先向左走到底，再开始转向右边，最后当左、右都没有子节点了，再处理父节点
-                curr.right = null;
-            }
-            else {
-                handler.accept(curr.e);  // 若一个节点左/右子节点为空则访问该节点，这也是上面在将左/右子节点入栈后即置空的原因
-                stack.pop();
+            curr = stack.pop();
+            if (curr.right == null || curr.right == prev) {  // 若父节点没有右子节点，或有右子节点但已经被访问过，则访问父节点
+                handler.accept(curr);
+                prev = curr;
+                curr = null;       // 置空 curr 好跳过 while 循环
+            } else {               // 若父节点有右子节点且还未被访问过，则把父节点放回 stack 中，先处理其右子节点
+                stack.push(curr);
+                curr = curr.right;
             }
         }
     }
