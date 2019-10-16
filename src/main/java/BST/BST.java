@@ -345,13 +345,15 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         while (!stack.isEmpty()) {
             Node node = stack.pop();
             boolean isLeafNode = node.left == null && node.right == null;
-            boolean childrenVisited = set.contains(node.left) && set.contains(node.right);
+            boolean leftDone = set.contains(node.left);
+            boolean rightDone = set.contains(node.right);
+            boolean childrenDone = (leftDone && rightDone) || (node.left == null && rightDone) || (node.right == null && leftDone);
 
-            if (isLeafNode || childrenVisited) {  // 若是叶子节点或左右子节点已经被访问过，则访问当前节点，并加入 set
+            if (isLeafNode || childrenDone) {  // 若是叶子节点，或左右子节点已经被访问过，则访问当前节点，并加入 set
                 handler.accept(node);
                 set.add(node);
-            } else {                              // 若左右子节点中还有没被访问过的，则继续入栈
-                if (node.left != null || node.right != null) stack.push(node);
+            } else {                           // 若不是叶子节点，且左右子节点中还有没被访问过的，则继续入栈
+                stack.push(node);
                 if (node.left != null) stack.push(node.left);
                 if (node.right != null) stack.push(node.right);
             }
