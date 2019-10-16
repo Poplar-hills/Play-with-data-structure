@@ -1,5 +1,7 @@
 package BST;
 
+import java.util.HashSet;
+
 /*
 * Binary Search Tree 二叉查找树
 *
@@ -82,6 +84,7 @@ package BST;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -330,10 +333,34 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             curr = curr.right;   // Step 3: 调转方向，开始处理右孩子
         }
     }
-    
-    public void postorderTraverseNR(Consumer<Node> handler) {
+
+    public void postorderTraversalNR(Consumer<Node> handler) {  // 后续遍历的方法1
         if (root == null)
-            throw new IllegalArgumentException("inorderTraverse failed.");
+            throw new IllegalArgumentException("postorderTraverse failed.");
+
+        Set<Node> set = new HashSet<>();    // 记录每个节点是否已被访问过
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            boolean isLeafNode = node.left == null && node.right == null;
+            boolean childrenVisited = set.contains(node.left) && set.contains(node.right);
+
+            if (isLeafNode || childrenVisited) {  // 若是叶子节点或左右子节点已经被访问过，则访问当前节点，并加入 set
+                handler.accept(node);
+                set.add(node);
+            } else {                              // 若左右子节点中还有没被访问过的，则继续入栈
+                if (node.left != null || node.right != null) stack.push(node);
+                if (node.left != null) stack.push(node.left);
+                if (node.right != null) stack.push(node.right);
+            }
+        }
+    }
+
+    public void postorderTraverseNR2(Consumer<Node> handler) {  // 后续遍历的方法2（不如方法1直观）
+        if (root == null)
+            throw new IllegalArgumentException("postorderTraverse failed.");
 
         Stack<Node> stack = new Stack<>();
         Node prev = null, curr = root;  // 多维护一个 prev 指针，记录上一次访问的节点
@@ -344,11 +371,11 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 curr = curr.left;
             }
             curr = stack.pop();
-            if (curr.right == null || curr.right == prev) {  // 若父节点没有右子节点，或有右子节点但已经被访问过，则访问父节点
+            if (curr.right == null || curr.right == prev) {  // 若没有右子节点，或有右子节点但已经被访问过，则可以访问当前节点（∵ 上面保证了没有左子节点）
                 handler.accept(curr);
                 prev = curr;
                 curr = null;       // 置空 curr 好跳过 while 循环
-            } else {               // 若父节点有右子节点且还未被访问过，则把父节点放回 stack 中，先处理其右子节点
+            } else {               // 若有右子节点且还未被访问过，则把该节点放回 stack 中，先遍历其右子节点
                 stack.push(curr);
                 curr = curr.right;
             }
