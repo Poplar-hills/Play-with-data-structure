@@ -218,17 +218,14 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
     public boolean isEmpty() { return size == 0; }
 
-    public E search(E e) {  // 在 BST 中查找 key 所对应的 value（与 contains 的实现非常相似）
+    public E search(E e) {  // 在 BST 中查找节点 e，并返回 e 的 value（与 contains 的实现非常相似）
         return search(root, e);
-    }  // 和 contains 的实现相差无几
+    }
 
     private E search(Node node, E e) {
-        if (node == null)
-            return null;
-        if (e.compareTo(node.e) < 0)
-            return search(node.left, e);
-        if (e.compareTo(node.e) > 0)
-            return search(node.right, e);
+        if (node == null) return null;
+        if (e.compareTo(node.e) < 0) return search(node.left, e);
+        if (e.compareTo(node.e) > 0) return search(node.right, e);
         return node.e;
     }
 
@@ -237,16 +234,12 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     private boolean contains(Node node, E e) {
-        // 递归的终止条件
-        if (node == null)  // 递归到底，没有子节点了
-            return false;
-        if (e.compareTo(node.e) == 0)  // 相当于 e.equals(node.e)
-            return true;
-        // 递归的最小重复单元
+        if (node == null) return false;  // 递归到底，没有子节点了
+        if (e.compareTo(node.e) == 0)  return true;  // 相当于 e.equals(node.e)
         return contains(e.compareTo(node.e) < 0 ? node.left : node.right, e);
     }
 
-    public E getMin() {  // 获取 BST 的最小值。因为每个节点的左孩子都比该节点小，因此整棵 BST 的最小值就在左下角的叶子节点上
+    public E getMin() {  // 获取 BST 的最小值。因为每个节点的左孩子都比该节点小，因此 BST 的最小值就在左下角的叶子节点上
         if (size == 0)
             throw new IllegalArgumentException("getMin failed. Empty tree");
         return getMin(root).e;
@@ -256,7 +249,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node.left == null ? node : getMin(node.left);
     }
 
-    public E getMax() {
+    public E getMax() {  // 同理 BST 的最大值就在右下角的叶子节点上
         if (size == 0)
             throw new IllegalArgumentException("getMax failed. Empty tree");
         return getMax(root).e;
@@ -266,26 +259,33 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node.right == null ? node : getMax(node.right);
     }
 
-
-    public E floor(E e) {  // 从 BST 上找出比给定值小的最大值（很好的练习，自己实现一下 ceil，思路类似）
+    public E floor(E e) {  // 从 BST 上找出小于 e 的最大节点，返回节点值（很好的练习，自己实现一下 ceil，思路类似）
         if (size == 0 || e.compareTo(getMin(root).e) < 0)  // 如果不存在 e 的 floor 值（树为空或 e 比树中的最小值还小）
             return null;
         return floor(root, e).e;
     }
 
-    private Node floor(Node node, E e) {
-        if (node == null)
+    private Node floor(Node node, E e) {  // 思路是先一直往左下角搜索，若碰到 = e 的节点即找到，若碰到 > e 的节点则继续在其右子树中找
+        if (node == null) return null;
+        if (e.compareTo(node.e) == 0) return node;                // 若相等，则该 node 就是 floor
+        if (e.compareTo(node.e) < 0) return floor(node.left, e);  // 若 e < node.e，则 floor 一定在左子树中
+        Node candidate = floor(node.right, e);                    // 若 e > node.e，则 floor 要么在右子树中，要么就是 ndoe 本身
+        return candidate != null ? candidate : node;              // （即要检查右子树中是否还有 < e 且 > node.e 的节点）
+
+    }
+
+    public E ceiling(E e) {  // 从 BST 上找出大于 e 的最小节点，返回节点值
+        if (size == 0 || e.compareTo(getMin(root).e) < 0)
             return null;
-        if (e.compareTo(node.e) == 0)  // 如果 e == node.e，则该 node 就是 e 的 floor 节点
-            return node;
-        if (e.compareTo(node.e) < 0)  // 如果 e < node.e，则 e 的 floor 节点一定在 node 的左子树中（因为 floor 一定小于 e）
-            return floor(node.left, e);
-        // 如果 e > node.e，则 node 可能是 e 的 floor 节点，也可能不是，需要尝试在 node 的右子树中寻找。
-        // 因为右子树中的节点一定都 > node，因此如果其中有 < e 的节点就一定是 floor。
-        Node potentialFloor = floor(node.right, e);
-        return potentialFloor != null
-                ? potentialFloor
-                : node;
+        return ceiling(root, e).e;
+    }
+
+    private Node ceiling(Node node, E e) {  // 思路是先一直往右下角搜索，若碰到 = e 的节点即找到，若碰到 < e 的节点则继续在其左子树中找
+        if (node == null) return null;
+        if (e.compareTo(node.e) == 0) return node;
+        if (e.compareTo(node.e) > 0) return ceiling(node.right, e);
+        Node candidate = ceiling(node.left, e);
+        return candidate != null ? candidate : node;
     }
 
     /*
