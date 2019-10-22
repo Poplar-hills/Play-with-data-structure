@@ -177,8 +177,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     private Node remove(Node node, E e) {
-        if (node == null)  // 从根节点到叶子节点的整个路径上都没找到 e
-            return null;
+        if (node == null) return null;  // 从根节点到叶子节点的整个路径上都没找到 e
         if (e.compareTo(node.e) < 0) {
             node.left = remove(node.left, e);
             return node;
@@ -322,13 +321,13 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         Node curr = root;
 
         while (curr != null || !stack.isEmpty()) {
-            while (curr != null) {  // Step 1: 不断入栈左孩子，直到叶子节点
+            while (curr != null) {  // Step 1: 不断入栈左孩子，直到最左节点（不一定是叶子节点）
                 stack.push(curr);
                 curr = curr.left;
             }
-            curr = stack.pop();  // Step 2: 出栈一个节点并访问它
+            curr = stack.pop();  // Step 2: 访问栈顶节点
             handler.accept(curr);
-            curr = curr.right;   // Step 3: 调转方向，开始处理右孩子
+            curr = curr.right;   // Step 3: 调转方向，开始处理右子树
         }
     }
 
@@ -366,7 +365,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         Node prev = null, curr = root;  // 多维护一个 prev 指针，记录上一次访问的节点
 
         while (curr != null || !stack.isEmpty()) {
-            while (curr != null) {  // 先往左走到底，一路上入栈所有节点
+            while (curr != null) {  // 先往左走到最左节点（不一定是叶子节点），一路上入栈所有节点
                 stack.push(curr);
                 curr = curr.left;
             }
