@@ -1,6 +1,7 @@
 package BST;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 *           5
@@ -41,7 +42,7 @@ public class BSTTest {
 
         // 测试 removeMax
         System.out.println("\nTesting removeMax...");
-        ArrayList<Integer> nums = new ArrayList<Integer>();
+        List<Integer> nums = new ArrayList<Integer>();
         while (!bst.isEmpty())
             nums.add(bst.removeMax());  // 不断 removeMax 并放到数组中
         System.out.println("Removed: " + nums);  // 结果应该是从大到小排列的

@@ -92,7 +92,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     private Node root;
     private int size;
 
-    private class Node {
+    class Node {
         private E e;
         private Node left, right;
 
