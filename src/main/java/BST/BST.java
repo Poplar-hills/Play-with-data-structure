@@ -294,7 +294,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     /*
      * Traverse
      * */
-    public void preorderTraverse(Consumer<Node> handler) {  // pre-order（前序），即在先访问节点，再访问左右子树
+    // 前序遍历（递归实现）
+    public void preorderTraverse(Consumer<Node> handler) {
         this.preorderTraverse(root, handler);
     }
 
@@ -305,7 +306,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         this.preorderTraverse(node.right, handler);  // 如果是后序遍历就是把上面访问节点的语句放在这句下面
     }
 
-    public void preorderTraverseNR(Consumer<Node> handler) {  // 前序遍历的非递归实现；实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
+    // 前序遍历（非递归实现）：实际应用很少（一般都用递归）；中序和后序的非递归实现更复杂
+    public void preorderTraverseNR(Consumer<Node> handler) {
         Stack<Node> stack = new Stack<>();  // 非递归的前中后序遍历都采用 stack 实现（levelOrderTraverseNR 采用 queue 实现）
         if (root == null) return;
         stack.push(root);
@@ -317,7 +319,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void inorderTraverseNR(Consumer<Node> handler) {  // 使用 stack 实现（对比 preorderTraverseNR 和 levelOrderTraverseNR）
+    // 中序遍历（非递归实现）（使用 Stack，对比 preorderTraverseNR 和 levelOrderTraverseNR）
+    public void inorderTraverseNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
 
@@ -335,7 +338,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void postorderTraversalNR(Consumer<Node> handler) {  // 后续遍历的方法1
+    // 后续遍历（非递归实现）：方法1
+    public void postorderTraversalNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("postorderTraverse failed.");
 
@@ -361,7 +365,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void postorderTraverseNR2(Consumer<Node> handler) {  // 后续遍历的方法2（不如方法1直观）
+    // 后续遍历（非递归实现）：方法2（不如方法1直观）
+    public void postorderTraverseNR2(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("postorderTraverse failed.");
 
@@ -385,7 +390,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void levelOrderTraverseNR(Consumer<Node> handler) {  // 层序遍历（广度优先遍历）
+    // 层序遍历（BFS）（非递归实现）
+    public void levelOrderTraverseNR(Consumer<Node> handler) {
         Queue<Node> queue = new LinkedList<>();  // 广度优先遍历通常使用 queue 作为辅助结构（对比 preorderTraverseNR、inorderTraverseNR）
         queue.add(root);
         while (!queue.isEmpty()) {
@@ -396,7 +402,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    public void levelOrderTraverse(Consumer<Node> handler) {  // 层序遍历的递归实现
+    // 层序遍历（BFS）（递归实现）
+    public void levelOrderTraverse(Consumer<Node> handler) {
         if (root == null) return;
         Queue<Node> q = new LinkedList<>();
         q.offer(root);
