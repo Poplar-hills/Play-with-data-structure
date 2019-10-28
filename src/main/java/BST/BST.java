@@ -118,45 +118,46 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     /*
      * 增操作
      * */
-    public void add(E e) { root = add(root, e); }  // 插入之后的结果都是更新这棵树
+    public void add(E e) { root = add(root, e); }  // 插入之后的结果是更新这棵树
 
-    private Node add(Node node, E e) {  // 因为二叉树具有递归性质，该方法用于将一个节点添加到某一个子树上
-        // 递归的终止条件：插入元素的结果都是生成新节点、size + 1
-        if (node == null) {  // 递归到底，没有子节点了
+    private Node add(Node node, E e) {
+        if (node == null) {      // 递归到底
             size++;
-            return new Node(e);
+            return new Node(e);  // 创建并返回新节点（递归函数每次返回更新后的子树）
         }
-        // 递归的最小重复单元：更新左子树或右子树
-        if (e.compareTo(node.e) < 0)
-            node.left = add(node.left, e);
-        else if (e.compareTo(node.e) > 0)  // 注意 compareTo(...) == 0 的情况不处理，这个 BST 的实现不允许存在重复节点
-            node.right = add(node.right, e);
 
-        return node;  // 每次递归返回的都是子树更新后的根节点
+        if (e.compareTo(node.e) < 0)
+            node.left = add(node.left, e);   // 更新左子树
+        else if (e.compareTo(node.e) > 0)
+            node.right = add(node.right, e); // 更新右子树（注意没有 == 0 的情况 ∵ 该 BST 的实现不允许重复节点）
+
+        return node;                         // 每次递归返回的都是子树更新后的根节点
     }
 
     /*
     * 删操作
     * */
-    public E removeMin() {  // 从 BST 中删除值最小的节点
+    // 删除最小节点
+    public E removeMin() {
         if (root == null)
             throw new IllegalArgumentException("removeMin failed");
-        E min = getMin();  // 找到最小值
-        root = removeMin(root);  // 从树上删除最小值节点和上一步的找到最小值实际上是分离的操作
+        E min = getMin();        // 先找到最小值，再删除之
+        root = removeMin(root);
         return min;
     }
 
     private Node removeMin(Node node) {
-        if (node.left == null) {  // left == null 的 node 即为最小值节点
-            Node rightNode = node.right;  // 可能有右子树，也可能没有，但可以统一操作
+        if (node.left == null) {          // 左子树为 null 的节点即为最小值节点
+            Node rightNode = node.right;  // 转移右子树（可能有也可能没有，这里统一操作）
             node.right = null;
             size--;
-            return rightNode;  // 将右子树返回给上一层节点，作为其左子树
+            return rightNode;             // 将右子树返回给上一层节点，作为其左子树
         }
-        node.left = removeMin(node.left);  // 返回节点作为左子树
-        return node;  // 每次递归返回的都是子树更新后的根节点
+        node.left = removeMin(node.left);  // 递归更新左子树
+        return node;
     }
 
+    // 删除最大节点
     public E removeMax() {
         if (root == null)
             throw new IllegalArgumentException("removeMax failed");
@@ -166,8 +167,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     private Node removeMax(Node node) {
-        if (node.right == null) {
-            Node leftNode = node.left;
+        if (node.right == null) {       // 右子树为 null 的节点即为最大值节点
+            Node leftNode = node.left;  // 转移左子树
             node.left = null;
             size--;
             return leftNode;
@@ -176,40 +177,40 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node;
     }
 
-    public void remove(E e) {  // 从 BST 中删除任意一个节点
+    // 删除节点值为 e 的节点
+    public void remove(E e) {
         root = remove(root, e);
     }
 
     private Node remove(Node node, E e) {
-        if (node == null) return null;  // 从根节点到叶子节点的整个路径上都没找到 e
-        if (e.compareTo(node.e) < 0) {
+        if (node == null) return null;           // 整棵树上没找到 e
+        if (e.compareTo(node.e) < 0) {           // e 在左子树上
             node.left = remove(node.left, e);
             return node;
-        } else if (e.compareTo(node.e) > 0) {
+        } else if (e.compareTo(node.e) > 0) {    // e 在右子树上
             node.right = remove(node.right, e);
             return node;
-        } else {  // 递归的终止条件：e.compareTo(node.e) == 0 即 e.equals(node.e)，即该节点就是要删除的节点
-            if (node.left == null) {  // 如果待删除节点只有右子树，或左右都没有
+        } else {                                 // 该节点就是待删除节点（递归的终止条件）
+            if (node.left == null) {             // 若待删除节点只有右子树（或左右都没有），则转移右子树
                 Node rightNode = node.right;
                 node.right = null;
                 size--;
                 return rightNode;
             }
-            if (node.right == null) {  // 如果待删除节点只有左子树，或左右都没有
+            if (node.right == null) {            // 若待删除节点只有左子树（或左右都没有），则转移左子树
                 Node leftNode = node.left;
                 node.left = null;
                 size--;
                 return leftNode;
             }
-
-            // 如果待删除节点左右子数都存在，则使用 Hibbard Deletion 方法：
-            // 1. 找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点。其实找前驱节点也可以，即比待删除节点小的最大节点）
+            // 如果待删除节点左右子树都有，则使用 Hibbard Deletion 方法：
+            // 1. 先找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点。找前驱节点也可以，即比待删除节点小的最大节点）
             // 2. 用这个节点取代待删除节点的位置
             // 3. 删除待删除节点
-            Node successor = getMin(node.right);
-            successor.right = removeMin(node.right);  // removeMin 里发生了一次 size--，因此后面不用再减了。另外，此处顺序很重要，要先 removeMin（SEE: https://coding.imooc.com/learn/questiondetail/84029.html）
-            successor.left = node.left;  // 再给 successor.left 赋值，因为 removeMin 中要找到 node.right 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
-            node.left = node.right = null;
+            Node successor = getMin(node.right);      // 右子树中最小的就是后继节点
+            successor.right = removeMin(node.right);  // removeMin 里已经 size-- 过 ∴ 后面不用再减了。此处顺序很重要，要先给右子树 removeMin，再给 successor.left 赋值
+            successor.left = node.left;               // （SEE: https://coding.imooc.com/learn/questiondetail/84029.html），因为 removeMin 中要找到 node.right
+            node.left = node.right = null;            // 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
             return successor;
         }
     }
@@ -221,27 +222,19 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
     public boolean isEmpty() { return size == 0; }
 
-    public E search(E e) {  // 在 BST 中查找节点 e，并返回 e 的 value（与 contains 的实现非常相似）
-        return search(root, e);
-    }
-
-    private E search(Node node, E e) {
-        if (node == null) return null;
-        if (e.compareTo(node.e) < 0) return search(node.left, e);
-        if (e.compareTo(node.e) > 0) return search(node.right, e);
-        return node.e;
-    }
-
+    // contains
     public boolean contains(E e) {
         return contains(root, e);
     }
 
     private boolean contains(Node node, E e) {
-        if (node == null) return false;  // 递归到底，没有子节点了
-        if (e.compareTo(node.e) == 0)  return true;  // 相当于 e.equals(node.e)
-        return contains(e.compareTo(node.e) < 0 ? node.left : node.right, e);
+        if (node == null) return false;
+        if (e.compareTo(node.e) == 0)  return true;
+        Node nextToSearch = e.compareTo(node.e) < 0 ? node.left : node.right;
+        return contains(nextToSearch, e);
     }
 
+    // getMin
     public E getMin() {  // 获取 BST 的最小值。因为每个节点的左孩子都比该节点小，因此 BST 的最小值就在左下角的叶子节点上
         if (size == 0)
             throw new IllegalArgumentException("getMin failed. Empty tree");
@@ -252,6 +245,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node.left == null ? node : getMin(node.left);
     }
 
+    // getMax
     public E getMax() {  // 同理 BST 的最大值就在右下角的叶子节点上
         if (size == 0)
             throw new IllegalArgumentException("getMax failed. Empty tree");
@@ -262,7 +256,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         return node.right == null ? node : getMax(node.right);
     }
 
-    public E floor(E e) {  // 从 BST 上找出小于 e 的最大节点，返回节点值（很好的练习，自己实现一下 ceil，思路类似）
+    // 返回小于 e 的最大节点值（很好的练习，自己实现一下）
+    public E floor(E e) {
         if (size == 0 || e.compareTo(getMin(root).e) < 0)  // 如果不存在 e 的 floor 值（树为空或 e 比树中的最小值还小）
             return null;
         return floor(root, e).e;
@@ -277,7 +272,8 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
 
     }
 
-    public E ceiling(E e) {  // 从 BST 上找出大于 e 的最小节点，返回节点值
+    // 返回大于 e 的最小节点值（很好的练习，自己实现一下）
+    public E ceiling(E e) {
         if (size == 0 || e.compareTo(getMin(root).e) < 0)
             return null;
         return ceiling(root, e).e;
@@ -371,7 +367,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             throw new IllegalArgumentException("postorderTraverse failed.");
 
         Stack<Node> stack = new Stack<>();
-        Node prev = null, curr = root;  // 多维护一个 prev 指针，记录上一次访问的节点
+        Node prev = null, curr = root;  // 用一个 prev 指针记录上一次访问的节点（作用类似方法1中的 Set）
 
         while (curr != null || !stack.isEmpty()) {
             while (curr != null) {  // 先往左走到最左节点（不一定是叶子节点），一路上入栈所有节点
@@ -405,12 +401,12 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     // 层序遍历（BFS）（递归实现）
     public void levelOrderTraverse(Consumer<Node> handler) {
         if (root == null) return;
-        Queue<Node> q = new LinkedList<>();
+        Queue<Node> q = new LinkedList<>();  // 对比非递归实现，该实现其实是用递归来模拟 while 循环
         q.offer(root);
         levelOrderTraverse(q, handler);
     }
 
-    private void levelOrderTraverse(Queue<Node> q, Consumer<Node> handler) {
+    private void levelOrderTraverse(Queue<Node> q, Consumer<Node> handler) {  // 递归函数访问该节点，入队其子节点
         if (q.isEmpty()) return;
         Node curr = q.poll();
         handler.accept(curr);
