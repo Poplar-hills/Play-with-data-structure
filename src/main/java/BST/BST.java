@@ -203,14 +203,14 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 size--;
                 return leftNode;
             }
-            // 如果待删除节点左右子树都有，则使用 Hibbard Deletion 方法：
-            // 1. 先找到后继节点（比待删除节点大的最小节点，即待删除节点右子树的左下角节点。找前驱节点也可以，即比待删除节点小的最大节点）
+            // 若待删除节点左右子树都有，则使用 Hibbard Deletion 方法（SEE: https://coding.imooc.com/lesson/207.html#mid=13477, 2'26）：
+            // 1. 先找到后继节点（即比待删除节点大的最小节点，找前驱节点也可以，即比待删除节点小的最大节点）
             // 2. 用这个节点取代待删除节点的位置
             // 3. 删除待删除节点
             Node successor = getMin(node.right);      // 右子树中最小的就是后继节点
-            successor.right = removeMin(node.right);  // removeMin 里已经 size-- 过 ∴ 后面不用再减了。此处顺序很重要，要先给右子树 removeMin，再给 successor.left 赋值
-            successor.left = node.left;               // （SEE: https://coding.imooc.com/learn/questiondetail/84029.html），因为 removeMin 中要找到 node.right
-            node.left = node.right = null;            // 的左下角元素，当递归到 node 就是 successor 的时候，如果 node.left 已经被赋了新值，则就形成了循环引用
+            successor.right = removeMin(node.right);  // removeMin 里已经 size-- 过 ∴ 后面不用再减了。此处顺序很重要，要先给右子树赋值，再给
+            successor.left = node.left;               // 左子树赋值（SEE: https://coding.imooc.com/learn/questiondetail/84029.html）
+            node.left = node.right = null;
             return successor;
         }
     }
