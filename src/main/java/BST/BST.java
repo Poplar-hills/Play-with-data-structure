@@ -315,8 +315,28 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 中序遍历（非递归实现）（使用 Stack，对比 preorderTraverseNR 和 levelOrderTraverseNR）
+    // 中序遍历（非递归实现）：方法1（比方法2更直观一些）
     public void inorderTraverseNR(Consumer<Node> handler) {
+        if (root == null)
+            throw new IllegalArgumentException("inorderTraverse failed.");
+
+        Stack<Node> stack = new Stack<>();
+        Set<Node> set = new HashSet<>();  // 存储已访问过的节点
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            while (stack.peek().left != null && !set.contains(stack.peek().left))  // 不断入栈左子节点，直到最左节点
+                stack.push(stack.peek().left);
+
+            Node curr = stack.pop();  // 访问栈顶节点
+            handler.accept(curr);
+            set.add(curr);            // 访问过的节点放入 set
+            if (curr.right != null) stack.push(curr.right);  // 将右子节点入栈
+        }
+    }
+
+    // 中序遍历（非递归实现）：方法2
+    public void inorderTraverseNR2(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
 
