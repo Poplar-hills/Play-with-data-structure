@@ -23,14 +23,14 @@ import java.util.HashSet;
 *   2. 完全二叉树（complete binary tree）：叶子节点只在最后两层，且最后一层的叶子节点均在最左边（"完全"意味着每次添加节点都是在"补完"这棵树）。
 *   3. 完美二叉树（perfect binary tree）：即是完全二叉树，也是满二叉树，同时叶子节点均在最后一层（即形成了一个完美三角形）。
 *
-*              28                     28                     28
-*            /    \                 /    \                 /    \
-*          16     30              16      30             16     30
-*         /  \                  /   \    /  \           /  \   /  \
-*       13   22               13    22  29  34        13   22 29  42
-*           /  \             /  \  /
-*         18   25           8  15 20
-*           满二叉树                完全二叉树               完美二叉树
+*              7                     7                     7
+*            /   \                 /   \                 /   \
+*           3     9               3     9               3     9
+*          / \                  /  \   /  \            / \   / \
+*         1   5                1    5 8   10          1   5 8  10
+*            / \              / \  /
+*           4   6            0  2 4
+*           满二叉树               完全二叉树              完美二叉树
 *
 *   - 完全二叉树不一定是满二叉树（不一定每个节点都有两个子节点，如上图），反之亦然（如上图）；
 *   - 完全二叉树因为每次添加节点都是在“补全”这棵树，因此永远不会退化成链表（即节点个数 n 和树高 h 之间永远都是 h=log(n) 关系）；
@@ -58,9 +58,9 @@ import java.util.HashSet;
 *   3. 每个节点值必须具有可比较性（实现 Comparable 接口）。
 *
 * - BST 的遍历（使用上面的完美二叉树举例）：
-*   - 前序：父->左->右。树上顺序：28->16->13->22->30->29->42（层级从上到下）。
-*   - 中序：左->父->右。树上顺序：13->16->22->28->29->30->42（节点值从小到大）。
-*   - 后序：左->右->父。树上顺序：13->22->16->29->42->30->28（层级从下到上）（后序遍的一个应用是为 BST 释放内存，即对于一个
+*   - 前序：父->左->右。树上顺序：7->3->1->5->9->8->10（层级从上到下）。
+*   - 中序：左->父->右。树上顺序：1->3->5->7->8->9->10（节点值从小到大）。
+*   - 后序：左->右->父。树上顺序：1->5->3->8->10->9->7（层级从下到上）（后序遍的一个应用是为 BST 释放内存，即对于一个
 *     节点需先释放所有子节点内存，再释放父节点内存，因此需要后续遍历。Java 是自动垃圾回收，所以不需要操心该问题，但 C++ 就要了）。
 *   - 二叉树（而不只是 BST）的：
 *     1. 深度优先遍历（DFS，例如前序遍历）通常采用递归实现，也可以采用迭代 + Stack 实现；
@@ -335,7 +335,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
     }
 
     // 后续遍历（非递归实现）：方法1
-    public void postorderTraversalNR(Consumer<Node> handler) {
+    public void postorderTraverseNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("postorderTraverse failed.");
 
@@ -353,10 +353,10 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             if (isLeafNode || childrenDone) {  // 若是叶子节点，或左右子节点已经被访问过，则访问当前节点，并加入 set
                 handler.accept(node);
                 set.add(node);
-            } else {                           // 若不是叶子节点，且左右子节点中还有没被访问过的，则继续入栈
+            } else {                           // 若不是叶子节点，且左右子节点中还有没被访问过的，则放回栈中待后面访问
                 stack.push(node);
-                if (node.left != null) stack.push(node.left);
                 if (node.right != null) stack.push(node.right);
+                if (node.left != null) stack.push(node.left);
             }
         }
     }

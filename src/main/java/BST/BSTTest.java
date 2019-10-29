@@ -7,8 +7,8 @@ import java.util.List;
 *           5
 *         /   \
 *        2     6
-*       /  \    \
-*      0    3    8
+*       / \     \
+*      0   3     8
 * */
 
 public class BSTTest {
@@ -23,9 +23,13 @@ public class BSTTest {
         }
         System.out.println(bst);
 
-        // 测试遍历 bst
-        System.out.println("\nTesting level order traversing...");
+        // 测试层序遍历 bst
+        System.out.println("\nTesting level-order traversal...");
         bst.levelOrderTraverse(node -> System.out.println(node.toString()));
+
+        // 测试后序遍历 bst
+        System.out.println("\nTesting post-order traversal...");
+        bst.postorderTraverseNR(node -> System.out.println(node.toString()));
 
         // 测试 getMin, getMax
         System.out.println("\nTesting getMin, getMax...");
