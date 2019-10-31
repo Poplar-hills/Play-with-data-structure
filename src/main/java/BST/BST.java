@@ -348,9 +348,9 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 stack.push(curr);
                 curr = curr.left;
             }
-            curr = stack.pop();  // Step 2: 访问栈顶节点
+            curr = stack.pop();     // Step 2: 访问栈顶节点
             handler.accept(curr);
-            curr = curr.right;   // Step 3: 调转方向，开始处理右子树
+            curr = curr.right;      // Step 3: 调转方向，开始处理右子树（右子树可能为空 ∴ while 循环条件上要进行判断）
         }
     }
 
