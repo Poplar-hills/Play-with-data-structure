@@ -315,7 +315,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 中序遍历（非递归实现）：方法1（比方法2更直观一些）
+    // 中序遍历（非递归实现）：方法1
     public void inorderTraverseNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
@@ -335,7 +335,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 中序遍历（非递归实现）：方法2
+    // 中序遍历（非递归实现）：方法2（比方法1简洁）
     public void inorderTraverseNR2(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
