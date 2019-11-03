@@ -354,7 +354,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 后续遍历（非递归实现）：方法1
+    // 后续遍历（非递归实现）：方法1（使用 Set）
     public void postorderTraverseNR(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("postorderTraverse failed.");
@@ -381,7 +381,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 后续遍历（非递归实现）：方法2（不如方法1直观）
+    // 后续遍历（非递归实现）：方法2（不如方法1直观，但空间复杂度更低）
     public void postorderTraverseNR2(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("postorderTraverse failed.");
