@@ -398,7 +398,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             if (curr.right == null || curr.right == prev) {  // 若没有右子节点，或有右子节点但已经被访问过，则可以访问当前节点（∵ 上面保证了没有左子节点）
                 handler.accept(curr);
                 prev = curr;
-                curr = null;       // 置空 curr 好跳过 while 循环
+                curr = null;       // 置空 curr，好在 stack.isEmpty() 时能退出 while 循环
             } else {               // 若有右子节点且还未被访问过，则把该节点放回 stack 中，先遍历其右子节点
                 stack.push(curr);
                 curr = curr.right;
