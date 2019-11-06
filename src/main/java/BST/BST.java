@@ -387,7 +387,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
             throw new IllegalArgumentException("postorderTraverse failed.");
 
         Stack<Node> stack = new Stack<>();
-        Node prev = null, curr = root;  // 用一个 prev 指针记录上一次访问的节点（作用类似方法1中的 Set）
+        Node lastVisited = null, curr = root;  // 用一个 prev 指针记录上一次访问的节点（作用类似方法1中的 Set）
 
         while (curr != null || !stack.isEmpty()) {
             while (curr != null) {  // 先往左走到最左节点（不一定是叶子节点），一路上入栈所有节点
@@ -395,13 +395,13 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
                 curr = curr.left;
             }
             curr = stack.pop();
-            if (curr.right == null || curr.right == prev) {  // 若没有右子节点，或有右子节点但已经被访问过，则可以访问当前节点（∵ 上面保证了没有左子节点）
+            if (curr.right == null || curr.right == lastVisited) {  // 若没有右子节点，或右子节点已被访问过，则访问当前节点（∵ 上面保证了没有左子节点）
                 handler.accept(curr);
-                prev = curr;
-                curr = null;       // 置空 curr，好在 stack.isEmpty() 时能退出 while 循环
-            } else {               // 若有右子节点且还未被访问过，则把该节点放回 stack 中，先遍历其右子节点
-                stack.push(curr);
-                curr = curr.right;
+                lastVisited = curr;  // 访问完当前节点后将其标记为已访问
+                curr = null;         // 置空 curr，好在 stack.isEmpty() 时能退出 while 循环
+            } else {                 // 若有右子节点且还未被访问过，则把该节点放回 stack 中，先遍历其右子节点
+                stack.push(curr);    // 若有右子节点且未被访问过，则先不能访问 curr，放回栈中
+                curr = curr.right;   // 转型访问右子节点
             }
         }
     }
