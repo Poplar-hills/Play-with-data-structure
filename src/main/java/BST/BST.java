@@ -315,27 +315,7 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         }
     }
 
-    // 中序遍历（非递归实现）：方法1
-    public void inorderTraverseNR(Consumer<Node> handler) {
-        if (root == null)
-            throw new IllegalArgumentException("inorderTraverse failed.");
-
-        Stack<Node> stack = new Stack<>();
-        Set<Node> set = new HashSet<>();  // 存储已访问过的节点
-        stack.push(root);
-
-        while (!stack.isEmpty()) {
-            while (stack.peek().left != null && !set.contains(stack.peek().left))  // 不断入栈左子节点，直到最左节点
-                stack.push(stack.peek().left);
-
-            Node curr = stack.pop();  // 访问栈顶节点
-            handler.accept(curr);
-            set.add(curr);            // 访问过的节点放入 set
-            if (curr.right != null) stack.push(curr.right);  // 将右子节点入栈
-        }
-    }
-
-    // 中序遍历（非递归实现）：方法2（比方法1简洁）
+    // 中序遍历（非递归实现）
     public void inorderTraverseNR2(Consumer<Node> handler) {
         if (root == null)
             throw new IllegalArgumentException("inorderTraverse failed.");
@@ -343,14 +323,14 @@ public class BST<E extends Comparable<E>> {  // 可比较的泛型
         Stack<Node> stack = new Stack<>();
         Node curr = root;
 
-        while (curr != null || !stack.isEmpty()) {
+        while (curr != null || !stack.isEmpty()) {  // 当出栈最后一个节点后（此时栈为空，curr != null），curr 还可能有右子树需要入栈 ∴ 不能结束循环
             while (curr != null) {  // Step 1: 不断入栈左孩子，直到最左节点（不一定是叶子节点）
                 stack.push(curr);
                 curr = curr.left;
             }
-            curr = stack.pop();     // Step 2: 访问栈顶节点
+            curr = stack.pop();     // Step 2: 出栈并访问节点
             handler.accept(curr);
-            curr = curr.right;      // Step 3: 调转方向，开始处理右子树（右子树可能为空 ∴ while 循环条件上要进行判断）
+            curr = curr.right;      // Step 3: 调转方向，开始处理右子树（若右子树为空则会跳过内层 while 循环继续出栈下一个节点）
         }
     }
 
