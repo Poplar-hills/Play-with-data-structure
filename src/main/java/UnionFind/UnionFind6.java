@@ -18,24 +18,24 @@ public class UnionFind6 implements UF {
         }
     }
 
-    private int getSetId(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
+    private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
         if (setIds[p] != p)    // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
-            setIds[p] = getSetId(setIds[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
+            setIds[p] = find(setIds[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
         return setIds[p];
     }
 
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
-        return getSetId(p) == getSetId(q);
+        return find(p) == find(q);
     }
 
     @Override
     public void union(int p, int q) {  // 合并两个元素所属的集合，O(h) 复杂度
-        int pRoot = getSetId(p);
-        int qRoot = getSetId(q);
+        int pRoot = find(p);
+        int qRoot = find(q);
 
         if (pRoot == qRoot) return;
 

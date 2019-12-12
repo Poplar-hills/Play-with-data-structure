@@ -16,7 +16,7 @@ package UnionFind;
  *                                  0  1  2  2  4  5               0  1  2  2  4  2              0  1  2  2  0  2            ----------------
  *                                                                                                                           2  1  2  2  0  2
  * - 这样实现的并查集的 union(p,q) 和 isConnected(p,q) 操作的时间复杂度都是 O(h)，其中 h 为 p, q 所在的树的最大高度。
- *   这得益于 getSetId 的复杂度是 O(h)。
+ *   这得益于 find 方法的复杂度是 O(h)。
  * - 比起 UnionFind1，UnionFind2 中的 union 操作复杂度有所减小，而 isConnected 复杂度增大。
  * */
 
@@ -29,13 +29,13 @@ public class UnionFind2 implements UF {
             setIds[i] = i;
     }
 
-    private int getSetId(int p) {  // 查找元素 p 的集合编号（递归实现），O(h) 复杂度。（用图5中的4作为例子来理解）
+    private int find(int p) {  // 查找元素 p 的集合编号（递归实现），O(h) 复杂度。（用图5中的4作为例子来理解）
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("getSetId failed. p is out of bound.");
-        return setIds[p] == p ? p : getSetId(setIds[p]);  // 只有根节点的值等于其 set id ∴ 用这条性质判断是否到达根节点
+        return setIds[p] == p ? p : find(setIds[p]);  // 只有根节点的值等于其 set id ∴ 用这条性质判断是否到达根节点
     }
 
-    private int getSetIdNR(int p) {  // 查找元素 p 的集合编号（非递归实现）
+    private int findNR(int p) {  // 查找元素 p 的集合编号（非递归实现）
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("getSetIdNR failed. p is out of bound.");
 
@@ -46,13 +46,13 @@ public class UnionFind2 implements UF {
 
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
-        return getSetId(p) == getSetId(q);
+        return find(p) == find(q);
     }
 
     @Override
     public void union(int p, int q) {  // 合并两个元素所属的集合，O(h) 复杂度
-        int pRoot = getSetId(p);       // 比如 p 是上图4中的4，则 pRoot 是0
-        int qRoot = getSetId(q);       // 比如 q 是上图4中的3，则 qRoot 是2
+        int pRoot = find(p);       // 比如 p 是上图4中的4，则 pRoot 是0
+        int qRoot = find(q);       // 比如 q 是上图4中的3，则 qRoot 是2
 
         if (pRoot == qRoot) return;
 

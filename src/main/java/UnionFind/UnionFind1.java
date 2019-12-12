@@ -30,7 +30,7 @@ package UnionFind;
  *   集合编号： 0  1  2  3  4                 0  1  4  3  4                 0  1  0  3  0
  *
  * - 该实现的复杂度分析：
- *   1. isConnected 是 O(1)，得益于 getSetIp 的复杂度是 O(1)
+ *   1. isConnected 是 O(1)，得益于 find 方法的复杂度是 O(1)
  *   2. union 是 O(n)（待改进）
  * */
 
@@ -43,7 +43,7 @@ public class UnionFind1 implements UF {
             setIds[i] = i;
     }
 
-    private int getSetIp(int p) {  // 查找元素 p 的集合编号，O(1) 复杂度
+    private int find(int p) {  // 查找元素 p 的集合编号，O(1) 复杂度
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("getSetId failed. p is out of bound.");
         return setIds[p];
@@ -51,18 +51,18 @@ public class UnionFind1 implements UF {
 
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(1) 复杂度
-        return getSetIp(p) == getSetIp(q);
+        return find(p) == find(q);
     }
 
     @Override
     public void union(int p, int q) {  // 合并两个元素所属的集合，O(n) 复杂度
-        int pSetId = getSetIp(p);
-        int qSetId = getSetIp(q);
+        int pSetId = find(p);
+        int qSetId = find(q);
 
         if (pSetId == qSetId) return;
 
         for (int i = 0; i < setIds.length; i++)  // 遍历所有 set id，将其中所有的 pSetId 改为 qSetId
-            if (getSetIp(i) == pSetId)
+            if (find(i) == pSetId)
                 setIds[i] = qSetId;
     }
 

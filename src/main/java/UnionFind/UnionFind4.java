@@ -18,7 +18,7 @@ public class UnionFind4 implements UF {
         }
     }
 
-    private int getSetId(int p) {  // 查找元素 p 的集合编号，O(h) 复杂度
+    private int find(int p) {  // 查找元素 p 的集合编号，O(h) 复杂度
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
@@ -29,13 +29,13 @@ public class UnionFind4 implements UF {
 
     @Override
     public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
-        return getSetId(p) == getSetId(q);
+        return find(p) == find(q);
     }
 
     @Override
     public void union(int p, int q) {  // 合并两个元素所属的集合，O(h) 复杂度
-        int pRoot = getSetId(p);
-        int qRoot = getSetId(q);
+        int pRoot = find(p);
+        int qRoot = find(q);
 
         if (pRoot == qRoot) return;
 
