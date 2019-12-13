@@ -1,8 +1,8 @@
 package UnionFind;
 
 /*
- * - UnionFind4 加入了基于 rank 的优化（看树的高度，而不是树中元素个数），演示 SEE：
- *   https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
+ * - UnionFind4 在 UnionFind2 的基础上加入了基于树 rank（即树高）的优化。
+ *   演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
  * */
 
 public class UnionFind4 implements UF {

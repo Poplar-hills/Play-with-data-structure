@@ -1,8 +1,8 @@
 package UnionFind;
 
 /*
- * - UnionFind3 对 UnionFind2 做了基于树大小的优化。
- * - 原因 SEE: https://coding.imooc.com/lesson/207.html#mid=14168（7'43''）
+ * - UnionFind3 在 UnionFind2 的基础上加入了基于树 size（即树上节点数）的优化。
+ *   演示 SEE: https://coding.imooc.com/lesson/207.html#mid=14168（7'43''）
  * */
 
 public class UnionFind3 implements UF {
