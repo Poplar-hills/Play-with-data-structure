@@ -6,30 +6,16 @@ package UnionFind;
  * */
 
 public class UnionFind3 implements UF {
-    private int[] setIds;
+    private int[] parents;
     private int[] sizes;  // sizes[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树上的元素个数）
 
     public UnionFind3(int size) {
-        setIds = new int[size];
+        parents = new int[size];
         sizes = new int[size];
         for (int i = 0; i < size; i++) {
-            setIds[i] = i;
+            parents[i] = i;
             sizes[i] = 1;
         }
-    }
-
-    private int find(int p) {  // 查找元素 p 的集合编号，O(h) 复杂度
-        if (p < 0 || p >= setIds.length)
-            throw new IllegalArgumentException("find failed. p is out of bound.");
-
-        while(setIds[p] != p)
-            p = setIds[p];
-        return p;
-    }
-
-    @Override
-    public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
-        return find(p) == find(q);
     }
 
     @Override
@@ -40,15 +26,29 @@ public class UnionFind3 implements UF {
         if (pRoot == qRoot) return;
 
         if (sizes[pRoot] < sizes[qRoot]) {  // 判断 p, q 所在的树的 size，将小者的根节点连接到大者的根节点上（加上该优化后性能大幅提升）
-            setIds[pRoot] = qRoot;
+            parents[pRoot] = qRoot;
             sizes[qRoot] += sizes[pRoot];
         } else {
-            setIds[qRoot] = pRoot;
+            parents[qRoot] = pRoot;
             sizes[pRoot] += sizes[qRoot];
         }
     }
 
+    private int find(int p) {  // 查找元素 p 的集合编号，O(h) 复杂度
+        if (p < 0 || p >= parents.length)
+            throw new IllegalArgumentException("find failed. p is out of bound.");
+
+        while(parents[p] != p)
+            p = parents[p];
+        return p;
+    }
+
     @Override
-    public int getSize() { return setIds.length; }
+    public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
+        return find(p) == find(q);
+    }
+
+    @Override
+    public int getSize() { return parents.length; }
 }
 

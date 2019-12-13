@@ -6,30 +6,16 @@ package UnionFind;
  * */
 
 public class UnionFind6 implements UF {
-    private int[] setIds;
+    private int[] parents;
     private int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度
 
     public UnionFind6(int size) {
-        setIds = new int[size];
+        parents = new int[size];
         ranks = new int[size];
         for (int i = 0; i < size; i++) {
-            setIds[i] = i;
+            parents[i] = i;
             ranks[i] = 1;
         }
-    }
-
-    private int find(int p) {  // 查找元素 p 所对应的集合编号，O(h) 复杂度
-        if (p < 0 || p >= setIds.length)
-            throw new IllegalArgumentException("find failed. p is out of bound.");
-
-        if (setIds[p] != p)    // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
-            setIds[p] = find(setIds[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
-        return setIds[p];
-    }
-
-    @Override
-    public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
-        return find(p) == find(q);
     }
 
     @Override
@@ -40,16 +26,30 @@ public class UnionFind6 implements UF {
         if (pRoot == qRoot) return;
 
         if (ranks[pRoot] < ranks[qRoot])
-            setIds[pRoot] = qRoot;
+            parents[pRoot] = qRoot;
         else if (ranks[pRoot] > ranks[qRoot])
-            setIds[qRoot] = pRoot;
+            parents[qRoot] = pRoot;
         else {
-            setIds[qRoot] = pRoot;
+            parents[qRoot] = pRoot;
             ranks[pRoot] += 1;
         }
     }
 
+    private int find(int p) {             // 查找元素 p 所对应的集合编号，O(h) 复杂度
+        if (p < 0 || p >= parents.length)
+            throw new IllegalArgumentException("find failed. p is out of bound.");
+
+        if (parents[p] != p)               // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
+            parents[p] = find(parents[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
+        return parents[p];
+    }
+
     @Override
-    public int getSize() { return setIds.length; }
+    public boolean isConnected(int p, int q) {  // 查看两个元素是否属于同一个集合，O(h) 复杂度
+        return find(p) == find(q);
+    }
+
+    @Override
+    public int getSize() { return parents.length; }
 }
 

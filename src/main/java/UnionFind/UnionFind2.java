@@ -21,26 +21,36 @@ package UnionFind;
  * */
 
 public class UnionFind2 implements UF {
-    private int[] setIds;
+    private int[] parents;
 
     public UnionFind2(int size) {
-        setIds = new int[size];
+        parents = new int[size];
         for (int i = 0; i < size; i++)
-            setIds[i] = i;
+            parents[i] = i;
     }
 
-    private int find(int p) {  // 查找元素 p 的集合编号（递归实现），O(h) 复杂度。（用图5中的4作为例子来理解）
-        if (p < 0 || p >= setIds.length)
+    @Override
+    public void union(int p, int q) {  // 合并两个元素所属的集合，O(h) 复杂度
+        int pRoot = find(p);           // 比如 p 是上图4中的4，则 pRoot 是0
+        int qRoot = find(q);           // 比如 q 是上图4中的3，则 qRoot 是2
+
+        if (pRoot == qRoot) return;
+
+        parents[pRoot] = qRoot;        // 将 p 所在的根节点的集合编号置为 q 所在的根节点的集合编号
+    }
+
+    private int find(int p) {          // 查找元素 p 的集合编号（递归实现），O(h) 复杂度。（用图5中的4作为例子来理解）
+        if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("getSetId failed. p is out of bound.");
-        return setIds[p] == p ? p : find(setIds[p]);  // 只有根节点的值等于其 set id ∴ 用这条性质判断是否到达根节点
+        return parents[p] == p ? p : find(parents[p]);  // 只有根节点的值等于其 set id ∴ 用这条性质判断是否到达根节点
     }
 
-    private int findNR(int p) {  // 查找元素 p 的集合编号（非递归实现）
-        if (p < 0 || p >= setIds.length)
+    private int findNR(int p) {        // 查找元素 p 的集合编号（非递归实现）
+        if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("getSetIdNR failed. p is out of bound.");
 
-        while (setIds[p] != p)
-            p = setIds[p];
+        while (parents[p] != p)
+            p = parents[p];
         return p;
     }
 
@@ -50,15 +60,5 @@ public class UnionFind2 implements UF {
     }
 
     @Override
-    public void union(int p, int q) {  // 合并两个元素所属的集合，O(h) 复杂度
-        int pRoot = find(p);       // 比如 p 是上图4中的4，则 pRoot 是0
-        int qRoot = find(q);       // 比如 q 是上图4中的3，则 qRoot 是2
-
-        if (pRoot == qRoot) return;
-
-        setIds[pRoot] = qRoot;         // 将 p 所在的根节点的集合编号置为 q 所在的根节点的集合编号
-    }
-
-    @Override
-    public int getSize() { return setIds.length; }
+    public int getSize() { return parents.length; }
 }
