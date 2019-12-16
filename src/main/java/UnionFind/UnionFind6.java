@@ -5,6 +5,8 @@ package UnionFind;
  *
  * - 在 UnionFind4 的基础上加又入了基于路径压缩的另一种优化 —— 使用递归一次性将要查找的节点连接到根节点上（而不是像 UnionFind5
  *   那样每次上移一层），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14171（0'0''）。
+ *
+ * - UnionFind6 与 UnionFind5 的性能差距微乎其微，但思路更绕一点。
  * */
 
 public class UnionFind6 implements UF {

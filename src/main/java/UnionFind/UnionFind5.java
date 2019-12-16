@@ -42,13 +42,13 @@ public class UnionFind5 implements UF {
         }
     }
 
-    private int find(int p) {               // 查找元素 p 的集合编号，O(h) 复杂度
+    private int find(int p) {                  // 查找元素 p 的集合编号，O(h) 复杂度
         if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
         while (parents[p] != p) {
             parents[p] = parents[parents[p]];  // 就修改这一行，将爷爷节点的编号赋给当前的集合编号，即将 p 链接到了其爷爷节点上
-            p = parents[p];                  // 跳过 p 原本的父节点，直接从爷爷节点继续遍历
+            p = parents[p];                    // 跳过 p 原本的父节点，直接从爷爷节点继续遍历
         }
         return p;
     }
