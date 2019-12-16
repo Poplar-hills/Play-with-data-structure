@@ -1,6 +1,8 @@
 package UnionFind;
 
 /*
+ * Quick Find
+ *
  * - 在 UnionFind2 这个实现主要解决的是 UnionFind1 中 union 操作的时间复杂度是 O(n) 的问题。
  *   这一版的实现才是并查集真正的实现思想。
  *

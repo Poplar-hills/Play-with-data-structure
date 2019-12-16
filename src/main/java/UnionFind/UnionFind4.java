@@ -1,8 +1,10 @@
 package UnionFind;
 
 /*
- * - UnionFind4 在 UnionFind2 的基础上加入了基于树 rank（即树高）的优化。
- *   演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
+ * Rank-based Optimization
+ *
+ * - 在 UnionFind2 的基础上加入了基于树 rank（即树高）的优化。演示 SEE：
+ *   https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
  * */
 
 public class UnionFind4 implements UF {
@@ -14,7 +16,7 @@ public class UnionFind4 implements UF {
         ranks = new int[size];
         for (int i = 0; i < size; i++) {
             parents[i] = i;
-            ranks[i] = 1;
+            ranks[i] = 1;  // 初始 rank 都为1
         }
     }
 
@@ -25,11 +27,11 @@ public class UnionFind4 implements UF {
 
         if (pRoot == qRoot) return;
 
-        if (ranks[pRoot] < ranks[qRoot])
-            parents[pRoot] = qRoot;     // 将 rank 小的树的根节点连接到 rank 大的树的根节点上，合并之后 rank 大的树的高度不变
+        if (ranks[pRoot] < ranks[qRoot])  // 在 union 之前先判断两个 root 的 rank
+            parents[pRoot] = qRoot;       // 将 rank 小的 root 连接到大 root 上
         else if (ranks[pRoot] > ranks[qRoot])
             parents[qRoot] = pRoot;
-        else {                         // 只有当双方 rank 相等时，合并产生的新树的高度才会比之前增加1（画一画就知道了）
+        else {                            // 若双方 rank 相等，则连接后产生的新树的高度比之前大1（画一画就知道了）
             parents[qRoot] = pRoot;
             ranks[pRoot] += 1;
         }
@@ -39,7 +41,7 @@ public class UnionFind4 implements UF {
         if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        while(parents[p] != p)
+        while (parents[p] != p)
             p = parents[p];
         return p;
     }

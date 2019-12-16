@@ -1,8 +1,10 @@
 package UnionFind;
 
 /*
- * - UnionFind5 加入了基于路径压缩（方法之一）的优化，即通过压缩树的高度来较小 O(h) 中的 h，以达到效率优化的目的（一种非常
- *   经典的优化手段），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14170（0'00''）。
+ * Path Compression Optimization 1
+ *
+ * - 在 UnionFind4 的基础上加又入了基于路径压缩（方法之一）优化，即通过压缩树的高度来较小 O(h) 中的 h，以达到效率优化的目的
+ *   （一种非常经典的优化手段），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14170（0'00''）。
  *
  * - 思路：在寻找根节点的过程中顺便压缩树的高度，将当前节点链接到其爷爷节点上。
  *
@@ -30,7 +32,7 @@ public class UnionFind5 implements UF {
 
         if (pRoot == qRoot) return;
 
-        if (ranks[pRoot] < ranks[qRoot])
+        if (ranks[pRoot] < ranks[qRoot])  // 基于 rank 进行 union
             setIds[pRoot] = qRoot;
         else if (ranks[pRoot] > ranks[qRoot])
             setIds[qRoot] = pRoot;
@@ -40,7 +42,7 @@ public class UnionFind5 implements UF {
         }
     }
 
-    private int find(int p) {  // 查找元素 p 的集合编号，O(h) 复杂度
+    private int find(int p) {               // 查找元素 p 的集合编号，O(h) 复杂度
         if (p < 0 || p >= setIds.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 

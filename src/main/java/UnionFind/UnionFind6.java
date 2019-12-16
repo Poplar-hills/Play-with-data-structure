@@ -1,8 +1,10 @@
 package UnionFind;
 
 /*
- * - UnionFind6 采用了基于路径压缩的另一种优化思路 —— 使用递归一次性将要查找的节点链接到根节点上（而不是像 UnionFind5 那样
- *   每次上移一层），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14171（0'0''）。
+ * Path Compression Optimization 2
+ *
+ * - 在 UnionFind4 的基础上加又入了基于路径压缩的另一种优化 —— 使用递归一次性将要查找的节点连接到根节点上（而不是像 UnionFind5
+ *   那样每次上移一层），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14171（0'0''）。
  * */
 
 public class UnionFind6 implements UF {
@@ -25,7 +27,7 @@ public class UnionFind6 implements UF {
 
         if (pRoot == qRoot) return;
 
-        if (ranks[pRoot] < ranks[qRoot])
+        if (ranks[pRoot] < ranks[qRoot])  // 基于 rank 进行 union
             parents[pRoot] = qRoot;
         else if (ranks[pRoot] > ranks[qRoot])
             parents[qRoot] = pRoot;
@@ -35,13 +37,13 @@ public class UnionFind6 implements UF {
         }
     }
 
-    private int find(int p) {             // 查找元素 p 所对应的集合编号，O(h) 复杂度
+    private int find(int p) {               // 查找元素 p 所对应的集合编号，O(h) 复杂度
         if (p < 0 || p >= parents.length)
             throw new IllegalArgumentException("find failed. p is out of bound.");
 
-        if (parents[p] != p)               // 通过递归压缩路径 —— 将 p 和 p 与根节点之间的每一个节点都链接到根节点上
-            parents[p] = find(parents[p]);  // 将当前节点链接到父节点的根节点上（每次递归都去找父节点的根节点）
-        return parents[p];
+        if (parents[p] != p)                // 通过递归压缩路径，即将 p 和根节点之间的所有节点都直接连接到 p 的根节点上
+            parents[p] = find(parents[p]);  // 在压缩过程中，不断将 p 的父节点（parents[p]）连接到 p 的根节点上
+        return parents[p];                  // 最后返回 p 的父节点，也就是 p 的根节点
     }
 
     @Override
