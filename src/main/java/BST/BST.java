@@ -69,7 +69,7 @@ import java.util.HashSet;
 *
 * - BST 的重要性质 —— 顺序性。BST 中存储元素是隐含顺序的（中序遍历会将节点值从小到大排列），因此
 *   1. 基于 BST 实现的 TreeSet、TreeMap 类都是有顺序性的，而 HashSet、HashMap 则没有。
-*   2. 基于顺序性，很容易实现一些其他有用的方法：
+*   2. 基于顺序性，很容易实现一些有用的方法：
 *     - getSuccessor、getPredecessor：给定一个值，找到其前驱、后继节点值。
 *     - floor、ceil：给定一个值，找到比它小的最大节点值、比它大的最小节点值。
 *     - rank：给定一个节点值，找到其在 BST 上的排名。

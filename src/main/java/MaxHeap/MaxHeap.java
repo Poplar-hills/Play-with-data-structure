@@ -36,7 +36,9 @@ package MaxHeap;
 *   - 唯一的添加操作就是从堆尾添加元素，然后不断 sift up 直到到达合适的位置。
 *
 * - 二叉堆的时间复杂度：因为二叉堆是一棵完全二叉树，因此永远不会退化成链表。因此其节点个数和高度之间的关系永远都是
-*   logn 级别的关系。因此其 insert 和 extractMax 操作的时间复杂度永远都是 O(logn)。
+*   logn 级别的关系，因此：
+          insert     find-max    extract-max  create-by-insert  create-by-heapify
+          O(logn)      O(1)        O(logn)        O(nlogn)             O(n)
 *
 * - 用任意数组生成最大堆（heapify）：
 *   - 因为最大堆可以用数组来表示，因此给定任意数组，只要合理地交换数组中的元素就能将其整理成最大堆的形态，有2种方法：
