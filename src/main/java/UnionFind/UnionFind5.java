@@ -10,6 +10,8 @@ package UnionFind;
  *
  * - UnionFind5 的时间复杂度近乎是 O(1) 的，是超级快的。因为每一次查询都会进行路径压缩，因此每一个元素都离根节点非常近
  *   （或者说层数非常少），当层数为1的时候，查询的复杂度就是 O(1)。
+ *
+ * - 推荐用该版本作为 UnionFind 的标准实现。
  * */
 
 public class UnionFind5 implements UF {

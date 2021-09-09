@@ -6,10 +6,8 @@ package UnionFind;
  * - 在 UnionFind4 的基础上加又入了基于路径压缩的另一种优化 —— 使用递归一次性将要查找的节点连接到根节点上（而不是像 UnionFind5
  *   那样每次上移一层），演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14171（0'0''）。
  *
- * - UnionFind6 与 UnionFind5 的性能差距微乎其微，都是近乎为 O(1) 。因为每一次查询都会进行路径压缩，因此每一个元素都离根节点
- *   非常近（或者说层数非常少），当层数为1的时候，查询的复杂度就是 O(1)。
- *
- * - 推荐用该版本作为 UnionFind 的标准实现。
+ * - UnionFind6 与 UnionFind5 的性能差距微乎其微，都是近乎为 O(1) 。但实际上，在 L130_SurroundedRegions 中，若采用
+ *   该实现会超时，改为 UnionFind5 则不会。
  * */
 
 public class UnionFind6 implements UF {
