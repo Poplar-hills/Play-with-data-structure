@@ -3,8 +3,8 @@ package UnionFind;
 /*
  * Rank-based Optimization
  *
- * - 在 UnionFind2 的基础上加入了基于树 rank（即树高）的优化。演示 SEE：
- *   https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
+ * - 在 UnionFind2 的基础上加入了基于树高（rank）的优化。
+ * - 演示 SEE：https://coding.imooc.com/lesson/207.html#mid=14169（0'00''）
  * */
 
 public class UnionFind4 implements UF {
@@ -33,7 +33,7 @@ public class UnionFind4 implements UF {
             parents[qRoot] = pRoot;
         else {                            // 若双方 rank 相等，则连接后产生的新树的高度比之前大1（画一画就知道了）
             parents[qRoot] = pRoot;
-            ranks[pRoot] += 1;
+            ranks[pRoot] += 1;            // 此处是与 UnionFind3 的唯一区别：两棵树在合并后，总 rank +1
         }
     }
 

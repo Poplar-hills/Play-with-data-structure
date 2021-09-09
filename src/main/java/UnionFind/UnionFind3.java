@@ -3,8 +3,9 @@ package UnionFind;
 /*
  * Size-based Optimization
  *
- * - 在 UnionFind2 的基础上加入了基于树 size（即树上节点数）的优化。演示 SEE: 
- *   https://coding.imooc.com/lesson/207.html#mid=14168（7'43''）
+ * - 在 UnionFind2 的基础上加入了基于树上节点个数 size 的优化，将 size 小的树合并到 size 大的树上，使得合并后的树
+ *   有很大几率高度更小。
+ * - 演示 SEE: https://coding.imooc.com/lesson/207.html#mid=14168（11'34''）
  * */
 
 public class UnionFind3 implements UF {
@@ -16,7 +17,7 @@ public class UnionFind3 implements UF {
         sizes = new int[size];
         for (int i = 0; i < size; i++) {
             parents[i] = i;
-            sizes[i] = 1;  // 初始 size 都为1
+            sizes[i] = 1;  // 每棵树的初始 size 都为1
         }
     }
 
