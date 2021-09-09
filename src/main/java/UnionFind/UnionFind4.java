@@ -33,7 +33,7 @@ public class UnionFind4 implements UF {
             parents[qRoot] = pRoot;
         else {                            // 若双方 rank 相等，则连接后产生的新树的高度比之前大1（画一画就知道了）
             parents[qRoot] = pRoot;
-            ranks[pRoot] += 1;            // 此处是与 UnionFind3 的唯一区别：两棵树在合并后，总 rank +1
+            ranks[pRoot] += 1;
         }
     }
 
