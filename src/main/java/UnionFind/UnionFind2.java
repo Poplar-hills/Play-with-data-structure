@@ -23,7 +23,7 @@ package UnionFind;
  * */
 
 public class UnionFind2 implements UF {
-    private int[] parents;
+    private final int[] parents;
 
     public UnionFind2(int size) {
         parents = new int[size];

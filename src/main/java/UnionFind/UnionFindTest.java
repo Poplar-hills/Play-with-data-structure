@@ -2,7 +2,7 @@ package UnionFind;
 
 public class UnionFindTest {
     public static void main(String[] args) {
-        UF uf = new UnionFind5(10);
+        UF uf = new UnionFind6(10);
         System.out.println("Size: " + uf.getSize());
 
         uf.union(4, 8);

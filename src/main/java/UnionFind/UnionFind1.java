@@ -35,7 +35,7 @@ package UnionFind;
  * */
 
 public class UnionFind1 implements UF {
-    private int[] setIds;  // 集合编号
+    private final int[] setIds;  // 集合编号
 
     public UnionFind1(int size) {
         setIds = new int[size];

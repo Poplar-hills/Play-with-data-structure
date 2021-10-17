@@ -9,8 +9,8 @@ package UnionFind;
  * */
 
 public class UnionFind3 implements UF {
-    private int[] parents;
-    private int[] sizes;  // sizes[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树上的元素个数）
+    private final int[] parents;
+    private final int[] sizes;  // sizes[i] 表示以 i 为根的集合中的元素个数（即以 i 为根的树上的元素个数）
 
     public UnionFind3(int size) {
         parents = new int[size];

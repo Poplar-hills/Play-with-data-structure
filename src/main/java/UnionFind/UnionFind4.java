@@ -8,8 +8,8 @@ package UnionFind;
  * */
 
 public class UnionFind4 implements UF {
-    private int[] parents;
-    private int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度（不再是元素个数）
+    private final int[] parents;
+    private final int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度（不再是元素个数）
 
     public UnionFind4(int size) {
         parents = new int[size];

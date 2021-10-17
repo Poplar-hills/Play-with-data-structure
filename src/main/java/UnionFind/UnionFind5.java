@@ -15,8 +15,8 @@ package UnionFind;
  * */
 
 public class UnionFind5 implements UF {
-    private int[] parents;
-    private int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度
+    private final int[] parents;
+    private final int[] ranks;  // ranks[i] 表示以 i 为根的集合的树的高度
 
     public UnionFind5(int size) {
         parents = new int[size];
